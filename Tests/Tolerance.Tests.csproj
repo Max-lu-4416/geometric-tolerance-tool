@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../Core/Tolerance.Core.csproj" /><None Include="source-fixture.csv" CopyToOutputDirectory="PreserveNewest" /><None Include="general-fixture.csv" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><None Include="size-source-fixture.csv" CopyToOutputDirectory="PreserveNewest" /><None Include="standard-width-fixture.json" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
+</Project>
