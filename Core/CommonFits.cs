@@ -1,5 +1,5 @@
 namespace Tolerance.Core;
-public sealed record FitPreset(string HoleZone,int HoleGrade,string ShaftZone,int ShaftGrade,string Use)
+public sealed record FitPreset(string HoleZone,int HoleGrade,string ShaftZone,int ShaftGrade,string Use,bool IsPreferred=false)
 {
     public string Label=>$"{HoleZone}{HoleGrade}/{ShaftZone}{ShaftGrade}  ·  {Use}";
 }
@@ -29,6 +29,9 @@ public static class CommonFits
             Add(6,5,"f g h js k m n p r s t");Add(7,6,"f g h js k m n p r s t u");Add(8,7,"e f h js k m n");
             Add(8,8,"d e f h");Add(9,9,"d e f h");Add(10,10,"d h");Add(11,11,"a b c d h");Add(12,12,"b h");
         }
-        return list;
+        string[] preferred=basis==BasisSystem.Hole
+            ? ["H7/g6","H7/h6","H7/k6","H7/n6","H7/p6","H7/s6","H7/u6","H8/f7","H8/h7","H9/d9","H9/h9","H11/c11","H11/h11"]
+            : ["G7/h6","H7/h6","K7/h6","N7/h6","P7/h6","S7/h6","U7/h6","F8/h7","H8/h7","D9/h9","H9/h9","C11/h11","H11/h11"];
+        return list.Select(p=>p with {IsPreferred=preferred.Contains($"{p.HoleZone}{p.HoleGrade}/{p.ShaftZone}{p.ShaftGrade}")}).ToArray();
     }
 }

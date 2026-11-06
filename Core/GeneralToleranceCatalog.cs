@@ -1,5 +1,3 @@
-using System.Globalization;
-
 namespace Tolerance.Core;
 
 public sealed record GeneralQueryResult(ToleranceType Type, string Grade, decimal? Parameter,
@@ -94,13 +92,5 @@ public sealed class GeneralToleranceCatalog(ToleranceCatalog numeric)
         error = ""; return true;
     }
     private static bool TryPositive(string? text, out decimal value)
-    {
-        value = 0;
-        if (string.IsNullOrWhiteSpace(text) || !decimal.TryParse(text.Trim(), NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out value) || value <= 0) return false;
-        var parts = text.Trim().TrimStart('+').Split('.');
-        var integer = parts[0].TrimStart('0');
-        var fraction = parts.Length > 1 ? parts[1].TrimEnd('0') : "";
-        var canonical = (integer.Length == 0 ? "0" : integer) + (fraction.Length == 0 ? "" : "." + fraction);
-        return canonical == NumberDisplay.Format(value,0);
-    }
+        => ExactDecimal.TryParse(text, true, out value, out _) && value > 0;
 }

@@ -1,6 +1,7 @@
 using System.Text.Json;
 namespace Tolerance.Core;
 
+public sealed record SizeGradeAdvice(string Summary, string Detail);
 public enum FeatureKind { Hole, Shaft }
 public enum BasisSystem { Hole, Shaft }
 public sealed record SizeCell(string Kind, string Zone, string Grade, decimal LowerMm, decimal UpperMm,
@@ -49,13 +50,18 @@ public sealed class SizeToleranceCatalog
         if(basis==BasisSystem.Hole && holeZone!="H" || basis==BasisSystem.Shaft && shaftZone!="h") throw new ArgumentException("基孔制固定 H，基轴制固定 h。");
         return new(basis,LookupDeviation(FeatureKind.Hole,nominalMm,holeZone,holeGrade),LookupDeviation(FeatureKind.Shaft,nominalMm,shaftZone,shaftGrade));
     }
-    public static string GradeAdvice(int grade) => grade switch
+    public static string GradeAdvice(int grade) => GuidanceFor(grade).Detail;
+    public static SizeGradeAdvice GuidanceFor(int grade)
     {
-        <=4 => "精密量规、精密仪器及高精度配合。需具备稳定的精加工与检测能力。",
-        5 or 6 => "精密配合、机床主轴和轴承配合等。常配合磨削、精镗等工艺，最终按功能与工艺能力确定。",
-        7 or 8 => "一般机械中较常用的配合精度，如定位、滑动与装配连接。需结合偏差代号和实际间隙或过盈选用。",
-        9 or 10 => "要求较宽松的配合、一般间隙连接。适用于对定位精度要求不高的部位。",
-        11 or 12 => "粗配合和低精度连接，常用于较宽松的加工要求。",
-        _ => "尺寸精度要求较低的非配合尺寸或粗加工。粗等级通常不适用于精密定位。"
-    } + " 等级仅决定公差宽度，不能单独决定配合性质。";
+        (string summary,string detail) = grade switch
+        {
+            <=4 => ("精密量规、仪器及高精度配合", "精密量规、精密仪器及高精度配合。需具备稳定的精加工与检测能力。"),
+            5 or 6 => ("精密配合、主轴与轴承连接", "精密配合、机床主轴和轴承配合等。常配合磨削、精镗等工艺，最终按功能与工艺能力确定。"),
+            7 or 8 => ("一般机械定位、滑动与装配", "一般机械中较常用的配合精度，如定位、滑动与装配连接。需结合偏差代号和实际间隙或过盈选用。"),
+            9 or 10 => ("较宽松的配合与间隙连接", "要求较宽松的配合、一般间隙连接。适用于对定位精度要求不高的部位。"),
+            11 or 12 => ("低精度连接或非精密尺寸", "粗配合和低精度连接，常用于较宽松的加工要求。"),
+            _ => ("低精度连接或非精密尺寸", "尺寸精度要求较低的非配合尺寸或粗加工。粗等级通常不适用于精密定位。")
+        };
+        return new(summary, detail + " 等级仅决定公差宽度，不能单独决定配合性质。");
+    }
 }

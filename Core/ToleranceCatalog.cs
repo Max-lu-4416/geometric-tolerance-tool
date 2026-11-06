@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Text.Json;
 
 namespace Tolerance.Core;
@@ -78,20 +77,13 @@ public sealed class ToleranceCatalog
         { error = $"{type.Name}支持 {table.FirstGrade}～{table.LastGrade} 级。"; return false; }
         if (string.IsNullOrWhiteSpace(parameterText))
         { error = "请输入主参数，单位为 mm。"; return false; }
-        if (!decimal.TryParse(parameterText.Trim(), NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
-            CultureInfo.InvariantCulture, out var parameter))
-        { error = "请输入有效数字，小数点使用英文句点，例如 25.5。"; return false; }
-        // TryParse can silently round an excessively precise decimal across a
-        // table boundary. Reject such inputs instead of looking up a rounded size.
-        var input = parameterText.Trim();
-        bool negative = input.StartsWith('-');
-        var parts = input.TrimStart('+', '-').Split('.');
-        var whole = parts[0].TrimStart('0');
-        var fraction = parts.Length > 1 ? parts[1].TrimEnd('0') : "";
-        var canonical = (whole.Length == 0 ? "0" : whole) + (fraction.Length == 0 ? "" : "." + fraction);
-        if (negative && canonical != "0") canonical = "-" + canonical;
-        if (canonical != NumberDisplay.Format(parameter,0))
-        { error = "数字精度超出支持范围，请减少小数位数。"; return false; }
+        if (!ExactDecimal.TryParse(parameterText, true, out var parameter, out var parseError))
+        {
+            error = parseError == DecimalParseError.PrecisionExceeded
+                ? "数字精度超出支持范围，请减少小数位数。"
+                : "请输入有效数字，小数点使用英文句点，例如 25.5。";
+            return false;
+        }
         if (parameter <= 0 || parameter > table.Bounds[^1])
         { error = $"主参数必须大于 0 且不超过 {QueryResult.Format(table.Bounds[^1])} mm。"; return false; }
         int column = Array.FindIndex(table.Bounds, bound => parameter <= bound);

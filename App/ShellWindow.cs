@@ -1,5 +1,4 @@
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -12,7 +11,7 @@ internal sealed class ShellWindow : Window
 {
     internal ToolSettings Settings { get; private set; }
     internal SettingsStore Store { get; }
-    internal readonly MainWindow Geometry=new();
+    internal readonly MainWindow Geometry;
     internal readonly Dictionary<string,SizePage> SizePages=[];
     internal string ActivePage { get; private set; }="geometry";
     internal readonly Grid Design=new(){Width=1180,Height=770};
@@ -21,12 +20,14 @@ internal sealed class ShellWindow : Window
     private readonly TextBlock status=UI.Text("",12);
     private readonly Dictionary<string,Button> nav=[];
     private readonly Dictionary<DependencyObject,double> originalFonts=[];
-    private readonly DispatcherTimer copyTimer=new(){Interval=TimeSpan.FromMilliseconds(100)};
+    private readonly ClipboardService clipboard;
+    private (string Unit,int Places)? copyFormat;
     private readonly DispatcherTimer systemTimer=new(){Interval=TimeSpan.FromSeconds(2)};
-    private string pendingCopy="";private int attempts;
     private bool restoring;
-    internal ShellWindow(string? configPath=null)
+    internal ShellWindow(string? configPath=null, ClipboardService? clipboard=null)
     {
+        this.clipboard=clipboard??new ClipboardService();
+        Geometry=new(this.clipboard);
         Store=new(configPath??SettingsStore.DefaultPath);Settings=Store.Load();
         Title="公差查询工具";Width=1240;Height=870;MinWidth=1000;MinHeight=700;WindowStartupLocation=WindowStartupLocation.CenterScreen;
         FontFamily=new FontFamily("Microsoft YaHei UI");FontSize=14;UseLayoutRounding=true;
@@ -39,7 +40,7 @@ internal sealed class ShellWindow : Window
         var navigation=new Grid();Design.Children.Add(navigation);
         foreach(string id in new[]{"shaft","hole","shaft-fit","hole-fit","geometry","settings"})
         {
-            navigation.ColumnDefinitions.Add(new());var b=new Button{Content=PageTitle(id),Margin=new Thickness(0,0,8,8),Padding=new Thickness(12,8,12,8),FontSize=15};
+            navigation.ColumnDefinitions.Add(new());var b=new Button{Content=PageTitle(id),Style=(Style)FindResource("NavigationButton"),Margin=new Thickness(0,0,12,8),Padding=new Thickness(12,4,12,4)};
             Grid.SetColumn(b,nav.Count);navigation.Children.Add(b);nav.Add(id,b);b.Click+=(_,_)=>Navigate(id);
         }
         Grid.SetRow(Host,1);Design.Children.Add(Host);Grid.SetRow(status,2);Design.Children.Add(status);
@@ -52,18 +53,18 @@ internal sealed class ShellWindow : Window
             SizePages[id]=new(this,id,initial,catalog);
         }
         RestoreGeometry();Geometry.ViewModel.QueryChanged+=(_,_)=>SaveInputs();
-        copyTimer.Tick+=(_,_)=>TryCopy();
         systemTimer.Tick+=(_,_)=>{if(Settings.Theme=="system")ApplyTheme();};systemTimer.Start();
-        Closed+=(_,_)=>{SaveInputs();copyTimer.Stop();systemTimer.Stop();Geometry.Close();};
+        Closed+=(_,_)=>{SaveInputs();this.clipboard.Dispose();systemTimer.Stop();Geometry.Close();};
         ApplySettings();Navigate(Settings.StartupPage=="last"?Settings.LastPage:Settings.StartupPage);
     }
     internal static string PageTitle(string id)=>id switch{"shaft"=>"轴偏差","hole"=>"孔偏差","shaft-fit"=>"基轴制配合","hole-fit"=>"基孔制配合","settings"=>"设置",_=>"形位公差"};
     internal void Navigate(string id)
     {
+        if(id!=ActivePage)clipboard.Cancel();
         ActivePage=id;Host.Content=id=="geometry"?geometryContent:id=="settings"?BuildSettings():SizePages.GetValueOrDefault(id);
         if(id!="settings"){Settings.LastPage=id;Store.Save(Settings);}
-        foreach(var (key,b) in nav){b.BorderBrush=UI.Brush(key==id?"Accent":"Hairline");b.Foreground=UI.Brush(key==id?"Accent":"Ink");b.BorderThickness=new Thickness(key==id?2:1);}
-        UpdateLayout();ApplyFonts(Host);status.Text=Store.Status;
+        foreach(var (key,b) in nav){b.BorderBrush=key==id?UI.Brush("Accent"):Brushes.Transparent;b.Foreground=UI.Brush(key==id?"Accent":"Secondary");}
+        UpdateLayout();ApplyFonts(Design);status.Text=Store.Status;
     }
     private void RestoreGeometry()
     {
@@ -84,15 +85,19 @@ internal sealed class ShellWindow : Window
     }
     internal void ApplySettings()
     {
+        var format=(Settings.CopyUnit,Settings.DecimalPlaces);
+        if(copyFormat!=format)clipboard.Cancel();
+        copyFormat=format;
         NumberDisplay.MinimumDecimals=Settings.DecimalPlaces;Topmost=Settings.Topmost;ApplyTheme();
         foreach(var p in SizePages.Values)p.Refresh();Geometry.ViewModel.RefreshFormatting();
         foreach(var (name,unit) in new[]{("CopyMm","mm"),("CopyUm","μm")})
         {
             var button=(Button)Geometry.FindName(name);
-            button.SetResourceReference(BackgroundProperty,Settings.CopyUnit==unit?"Accent":"ControlSurface");
-            if(Settings.CopyUnit==unit)button.Foreground=Brushes.White;else button.SetResourceReference(ForegroundProperty,"Ink");
+            button.SetResourceReference(BackgroundProperty,Settings.CopyUnit==unit?"PrimarySurface":"ControlSurface");
+            button.SetResourceReference(ForegroundProperty,Settings.CopyUnit==unit?"PrimaryInk":"Ink");
+            button.SetResourceReference(BorderBrushProperty,Settings.CopyUnit==unit?"PrimarySurface":"Hairline");
         }
-        ApplyFonts(Host);SaveInputs();
+        ApplyFonts(Design);SaveInputs();
     }
     private void ApplyTheme()
     {
@@ -101,52 +106,48 @@ internal sealed class ShellWindow : Window
         {
             try{using var key=Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");dark=key?.GetValue("AppsUseLightTheme") is int value&&value==0;}catch(System.Security.SecurityException){}
         }
-        string[] keys=["Ink","Secondary","Muted","Accent","Hairline","Surface","CanvasBackground","ControlSurface","SelectionSurface"];
-        string[] colors=dark?["#E8EBEF","#C2CAD4","#ADB7C5","#8BB2FF","#48515C","#262D35","#1B2026","#323B46","#283F60"]:["#20252B","#515A64","#69727C","#245DDB","#E1E4E8","#FFFFFF","#F7F8F9","#F4F5F6","#F1F5FF"];
-        for(int i=0;i<keys.Length;i++)Application.Current.Resources[keys[i]]=new SolidColorBrush((Color)ColorConverter.ConvertFromString(colors[i]));
+        Appearance.Apply(dark);
         foreach(var p in SizePages.Values)p.Refresh();
-        foreach(var(key,b) in nav){b.BorderBrush=UI.Brush(key==ActivePage?"Accent":"Hairline");b.Foreground=UI.Brush(key==ActivePage?"Accent":"Ink");}
+        foreach(var(key,b) in nav){b.BorderBrush=key==ActivePage?UI.Brush("Accent"):Brushes.Transparent;b.Foreground=UI.Brush(key==ActivePage?"Accent":"Secondary");}
     }
     internal void ApplyFonts(DependencyObject root)
     {
-        void Visit(DependencyObject node)
+        var targets=new List<(DependencyObject Node,DependencyProperty Property)>();
+        void Collect(DependencyObject node)
         {
-            if(node is TextBlock t)
+            DependencyProperty? property=node is TextBlock?TextBlock.FontSizeProperty:node is Control?Control.FontSizeProperty:null;
+            if(property is not null)
             {
-                if(!originalFonts.TryGetValue(t,out var font)){font=t.FontSize;originalFonts[t]=font;}
-                t.FontSize=font*(Settings.LargeFont?1.12:1);
+                var source=DependencyPropertyHelper.GetValueSource(node,property);
+                // Template text inherits the control's scaled font. Scaling it again compounds size.
+                if(originalFonts.ContainsKey(node)||source.BaseValueSource!=BaseValueSource.Inherited&&source.BaseValueSource!=BaseValueSource.Default)
+                {
+                    if(!originalFonts.ContainsKey(node))originalFonts[node]=(double)node.GetValue(property);
+                    targets.Add((node,property));
+                }
             }
-            else if(node is Control c)
-            {
-                if(!originalFonts.TryGetValue(c,out var font)){font=c.FontSize;originalFonts[c]=font;}
-                c.FontSize=font*(Settings.LargeFont?1.12:1);
-            }
-            for(int i=0;i<VisualTreeHelper.GetChildrenCount(node);i++)Visit(VisualTreeHelper.GetChild(node,i));
+            for(int i=0;i<VisualTreeHelper.GetChildrenCount(node);i++)Collect(VisualTreeHelper.GetChild(node,i));
         }
-        Visit(root);
+        Collect(root);
+        foreach(var (node,property) in targets)node.SetValue(property,originalFonts[node]*(Settings.LargeFont?1.12:1));
     }
-    internal void Copy(string text)
-    {pendingCopy=text;attempts=0;TryCopy();}
-    private void TryCopy()
-    {
-        try{Clipboard.SetText(pendingCopy);copyTimer.Stop();status.Text="已复制到剪贴板。";}
-        catch(ExternalException){if(++attempts<6)copyTimer.Start();else{copyTimer.Stop();status.Text="剪贴板正被占用，请稍后重试。";}}
-    }
+    internal void Copy(string text) => clipboard.Copy(text,message=>status.Text=message);
+    internal void CancelCopy(string pageId) { if(ActivePage==pageId)clipboard.Cancel(); }
     private UIElement BuildSettings()
     {
         var card=UI.Card();var root=new StackPanel();card.Child=root;
-        root.Children.Add(UI.Text("设置",26,FontWeights.Medium));root.Children.Add(UI.Text("偏好自动保存到当前 Windows 用户。",14,margin:new Thickness(0,4,0,20)));
+        root.Children.Add(UI.Text("设置",24,FontWeights.Medium));root.Children.Add(UI.Text("偏好自动保存到当前 Windows 用户",14,margin:new Thickness(0,4,0,20)));
         var grid=new Grid();grid.ColumnDefinitions.Add(new());grid.ColumnDefinitions.Add(new(){Width=new GridLength(40)});grid.ColumnDefinitions.Add(new());root.Children.Add(grid);
         var left=new StackPanel();var right=new StackPanel();grid.Children.Add(left);Grid.SetColumn(right,2);grid.Children.Add(right);
         void Select(Panel panel,string label,string[] labels,string[] values,string current,Action<string> set)
         {
-            panel.Children.Add(UI.Text(label,15,FontWeights.Medium,new Thickness(0,0,0,8)));
-            var wrap=new WrapPanel{Margin=new Thickness(0,0,0,22)};panel.Children.Add(wrap);
+            panel.Children.Add(UI.Text(label,14,FontWeights.Medium,new Thickness(0,0,0,8)));
+            var wrap=new WrapPanel{Margin=new Thickness(0,0,0,24)};panel.Children.Add(wrap);
             for(int i=0;i<labels.Length;i++)
             {
-                string value=values[i];var b=new Button{Content=labels[i],Padding=new Thickness(12,8,12,8),Margin=new Thickness(0,0,6,6)};
-                b.BorderBrush=UI.Brush(value==current?"Accent":"Hairline");b.BorderThickness=new Thickness(value==current?2:1);
-                b.Click+=(_,_)=>{set(value);ApplySettings();Host.Content=BuildSettings();UpdateLayout();ApplyFonts(Host);};wrap.Children.Add(b);
+                string value=values[i];var b=new Button{Content=labels[i],Padding=new Thickness(12,8,12,8),Margin=new Thickness(0,0,8,8)};
+                b.BorderBrush=UI.Brush(value==current?"Accent":"Hairline");b.BorderThickness=new Thickness(1);b.SetResourceReference(BackgroundProperty,value==current?"SelectionSurface":"ControlSurface");
+                b.Click+=(_,_)=>{set(value);ApplySettings();Host.Content=BuildSettings();UpdateLayout();ApplyFonts(Design);};wrap.Children.Add(b);
             }
         }
         Select(left,"启动页面",["上次查询页","轴偏差","孔偏差","基轴制","基孔制","形位公差"],["last","shaft","hole","shaft-fit","hole-fit","geometry"],Settings.StartupPage,v=>Settings.StartupPage=v);

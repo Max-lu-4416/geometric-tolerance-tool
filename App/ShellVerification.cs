@@ -16,6 +16,7 @@ internal static class ShellVerification
         void Check(bool ok,string name){checks++;if(!ok)throw new InvalidOperationException(name);}
         void Flush()=>w.Dispatcher.Invoke(()=>w.UpdateLayout(),DispatcherPriority.ContextIdle);
         Check(w.ActivePage=="geometry","First launch geometry");
+        RefactorVerification.Run(w,directory,Check);
         foreach(var p in w.SizePages.Values)
         {
             Check(p.HasResult,"Default result "+p.PageId);
@@ -28,16 +29,81 @@ internal static class ShellVerification
         }
         w.SizePages["shaft"].Input.Nominal="50.123";w.SaveInputs();
         var saved=w.Store.Load();Check(saved.Inputs["shaft"].Nominal=="50.123","Save input");w.SizePages["shaft"].Input.Nominal="50";
+        foreach(var page in w.SizePages.Values.Where(p=>!p.PageId.EndsWith("-fit")))
+        {
+            w.Navigate(page.PageId);Flush();var kind=page.PageId=="hole"?FeatureKind.Hole:FeatureKind.Shaft;
+            Check(page.DeviationCells.Count==BandSelection.For(kind).Count,"Single-band matrix complete");
+            foreach(var cell in page.DeviationCells)
+            {
+                Check(cell.Button.IsEnabled,"All single bands valid at 50mm");cell.Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Flush();
+                Check((kind==FeatureKind.Hole?page.Hole:page.Shaft)?.Band==cell.Band.Band&&cell.Check.Visibility==Visibility.Visible,$"Single-band click selects zone and grade: expected {cell.Band.Band}, actual {(kind==FeatureKind.Hole?page.Hole:page.Shaft)?.Band}, check {cell.Check.Visibility}, error {page.Error}");
+            }
+            var initial=page.DeviationCells.Single(c=>c.Band.Band==(kind==FeatureKind.Hole?"H7":"g6"));initial.Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            page.SetMatrixMode(false);page.SetMatrixMode(true);Check(page.HasResult,"Single matrix/free selection retains result");
+            var limited=page.DeviationCells.Single(c=>c.Band.Band==(kind==FeatureKind.Hole?"A11":"a11"));limited.Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));page.Input.Nominal="0.5";page.Refresh();
+            Check(!page.HasResult&&!limited.Button.IsEnabled&&limited.Check.Visibility==Visibility.Visible&&page.Plot.Hole is null&&page.Plot.Shaft is null,"Single invalid size retains band and clears results");
+            page.Input.Nominal="600";page.Refresh();Check(page.DeviationCells.Count(c=>c.Button.IsEnabled)==(kind==FeatureKind.Hole?31:41),"Large-size matrix availability");
+            page.Input.Nominal="50";page.Refresh();initial.Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+        foreach(var page in w.SizePages.Values.Where(p=>p.PageId.EndsWith("-fit")))
+        {
+            w.Navigate(page.PageId);Flush();
+            var basis=page.PageId=="shaft-fit"?BasisSystem.Shaft:BasisSystem.Hole;
+            Check(page.MatrixCells.Count==CommonFits.For(basis).Count,"All common combinations appear once");
+            Check(page.MatrixCells.Count(c=>c.Preset.IsPreferred)==13,"13 verified preferred fits per basis");
+            foreach(var cell in page.MatrixCells)
+            {
+                Check(cell.Button.IsEnabled,"All default-size presets available");cell.Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Flush();
+                Check(page.Input.HoleZone==cell.Preset.HoleZone&&page.Input.HoleGrade==cell.Preset.HoleGrade&&page.Input.ShaftZone==cell.Preset.ShaftZone&&page.Input.ShaftGrade==cell.Preset.ShaftGrade,"Matrix click selects both bands");
+                Check(page.HasResult&&cell.Check.Visibility==Visibility.Visible,"Matrix selection produces result and check");
+            }
+            var defaultCell=page.MatrixCells.Single(c=>basis==BasisSystem.Hole?c.Preset.HoleZone=="H"&&c.Preset.HoleGrade==7&&c.Preset.ShaftZone=="g"&&c.Preset.ShaftGrade==6:c.Preset.HoleZone=="G"&&c.Preset.HoleGrade==7&&c.Preset.ShaftZone=="h"&&c.Preset.ShaftGrade==6);
+            defaultCell.Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            foreach(var mode in new[]{false,true}){page.SetMatrixMode(mode);Flush();Check(page.HasResult&&page.Fit!.MinimumDifferenceUm==9,"Mode switch retains fit");}
+            page.Input.Nominal="0";page.Refresh();Check(!page.HasResult&&page.MatrixCells.All(c=>!c.Button.IsEnabled)&&defaultCell.Check.Visibility==Visibility.Visible,"Invalid size disables matrix and retains highlight");
+            page.Input.Nominal="501";page.Refresh();Check(page.MatrixCells.All(c=>!c.Button.IsEnabled),"Matrix limited to 500mm");
+            page.Input.Nominal="50";page.Refresh();
+            var limited=page.MatrixCells.First(c=>basis==BasisSystem.Hole?c.Preset.HoleGrade==6&&c.Preset.ShaftZone=="t":c.Preset.HoleZone=="T"&&c.Preset.ShaftGrade==5);
+            limited.Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));page.Input.Nominal="3";page.Refresh();
+            Check(!limited.Button.IsEnabled&&!page.HasResult&&page.Plot.Hole is null&&limited.Check.Visibility==Visibility.Visible,"Missing small-size combination retains selection and clears result");
+            page.Input.Nominal="50";page.Refresh();defaultCell.Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            if(basis==BasisSystem.Hole)Check(page.MatrixCells.Any(c=>c.Preset.HoleGrade==8&&c.Preset.ShaftZone=="f"&&c.Preset.ShaftGrade==7)&&page.MatrixCells.Any(c=>c.Preset.HoleGrade==8&&c.Preset.ShaftZone=="f"&&c.Preset.ShaftGrade==8),"Distinct H8 subrows");
+        }
         foreach(string theme in new[]{"light","dark","system"})foreach(bool large in new[]{false,true})
         {
             w.Settings.Theme=theme;w.Settings.LargeFont=large;w.ApplySettings();
+            double Contrast(Brush foreground,Brush background)
+            {
+                double L(Brush brush){var c=((SolidColorBrush)brush).Color;double Channel(byte b){double x=b/255d;return x<=.04045?x/12.92:Math.Pow((x+.055)/1.055,2.4);}return .2126*Channel(c.R)+.7152*Channel(c.G)+.0722*Channel(c.B);}
+                double a=L(foreground),b=L(background);return (Math.Max(a,b)+.05)/(Math.Min(a,b)+.05);
+            }
+            foreach(string fill in new[]{"MatrixSurface","MatrixPreferred","MatrixSecondary"})Check(Contrast(UI.Brush("MatrixInk"),UI.Brush(fill))>=4.5,"Matrix text contrast "+theme+fill);
+            Check(Contrast(UI.Brush("PrimaryInk"),UI.Brush("PrimarySurface"))>=4.5,"Primary action text contrast");
             foreach(string page in new[]{"shaft","hole","shaft-fit","hole-fit","geometry","settings"})
             {
                 w.Navigate(page);Flush();
                 if(w.SizePages.TryGetValue(page,out var sizePage))
                 {
                     string selected=page is "hole" or "shaft-fit"?"7":"6";
-                    var grade=Descendants<Button>(sizePage).First(b=>Equals(b.Content,selected)&&b.IsEnabled);grade.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Flush();
+                    sizePage.SetMatrixMode(true);
+                    if(!page.EndsWith("-fit")){var band=sizePage.DeviationCells.Single(c=>c.Band.Band==(page=="hole"?"H7":"g6"));band.Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));}
+                    Flush();
+                    var fontSample=Descendants<TextBlock>(sizePage).First(t=>t.IsVisible&&t.Text=="公称尺寸");double size=fontSample.FontSize;
+                    for(int iteration=0;iteration<4;iteration++)w.ApplyFonts(w.Design);
+                    Check(Math.Abs(fontSample.FontSize-size)<.0001,"Repeated font application does not compound");
+                    Check(Math.Abs(size-(large?14*1.12:14))<.0001,"Stable base font scaling");
+                    Check(sizePage.ResultNumbers.All(t=>t.TextAlignment==TextAlignment.Right),"Aligned numeric columns");
+                    var cell=sizePage.DeviationCells.FirstOrDefault()?.Button??sizePage.MatrixCells.First().Button;
+                    Check(((SolidColorBrush)cell.Foreground).Color==((SolidColorBrush)UI.Brush("MatrixInk")).Color,"Matrix text follows theme");
+                    var primary=Descendants<Button>(sizePage).Single(b=>Equals(b.Content,"复制尺寸标注"));
+                    Check(primary.Style==w.FindResource("PrimaryButton"),"Annotation copy is primary action");
+                    var caption=Descendants<TextBlock>(primary).Single(t=>t.Text=="复制尺寸标注");
+                    Check(Math.Abs(caption.FontSize-primary.FontSize)<.0001,"Template text inherits scaled font once");
+                    decimal[] expected;
+                    if(sizePage.Fit is {} f)expected=[f.Hole.UpperUm/1000m,f.Hole.LowerUm/1000m,f.Hole.ToleranceUm,f.Hole.MinimumMm,f.Hole.MaximumMm,f.Shaft.UpperUm/1000m,f.Shaft.LowerUm/1000m,f.Shaft.ToleranceUm,f.Shaft.MinimumMm,f.Shaft.MaximumMm];
+                    else {var result=sizePage.Hole??sizePage.Shaft;expected=[result!.UpperUm/1000m,result.LowerUm/1000m,result.ToleranceUm/1000m,result.MinimumMm,result.MaximumMm,result.UpperUm,result.LowerUm,result.ToleranceUm];}
+                    var shown=sizePage.ResultNumbers.Where(t=>!string.IsNullOrEmpty(t.Text)).Select(t=>decimal.Parse(t.Text,System.Globalization.CultureInfo.InvariantCulture)).ToArray();
+                    Check(shown.SequenceEqual(expected),"Aligned display retains exact numeric values");
                     foreach(var e in Descendants<TextBlock>(sizePage).Where(e=>e.IsVisible))
                     {var bounds=e.TransformToAncestor(sizePage).TransformBounds(new Rect(e.RenderSize));Check(bounds.Bottom<=700&&bounds.Right<=1180,"Page text within card: "+e.Text);}
                 }
@@ -53,6 +119,14 @@ internal static class ShellVerification
                     }
                 }
                 if(theme!="system")Render(w,Path.Combine(directory,$"{page}-{theme}-{(large?"large":"standard")}.png"),1);
+                if(w.SizePages.ContainsKey(page))
+                {
+                    var p=w.SizePages[page];p.SetMatrixMode(false);Flush();
+                    Check(!Descendants<ScrollBar>(w).Any(s=>s.IsVisible),"Free mode no scroll");
+                    foreach(var e in Descendants<TextBlock>(p).Where(e=>e.IsVisible)){var b=e.TransformToAncestor(p).TransformBounds(new Rect(e.RenderSize));Check(b.Bottom<=701&&b.Right<=1181,"Free selector text within layout: "+e.Text);}
+                    if(theme=="light")Render(w,Path.Combine(directory,$"{page}-free-{(large?"large":"standard")}.png"),1);
+                    p.SetMatrixMode(true);
+                }
             }
         }
         w.Width=w.MinWidth;w.Height=w.MinHeight;w.Settings.LargeFont=true;w.Settings.Theme="light";w.ApplySettings();
@@ -74,6 +148,14 @@ internal static class ShellVerification
             CopyButton("复制轴 es").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText()=="-0.009000"),"Mm signed numeric copy");
             CopyButton("复制尺寸标注").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText().Contains("H7/g6")),"Dimension annotation");
             CopyButton("复制完整结果").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText().Contains("0.009000 ～ 0.050000 mm")&&!Clipboard.GetText().Contains("手册")),"Complete fit copy");
+            var shaftPage=w.SizePages["shaft"];w.Navigate("shaft");
+            shaftPage.DeviationCells.Single(c=>c.Band.Band=="n6").Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Descendants<Button>(shaftPage).Single(b=>Equals(b.Content,"复制上偏差")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText()=="0.033000"),"Single-band n6 upper deviation copy mm");
+            Descendants<Button>(shaftPage).Single(b=>Equals(b.Content,"复制最小尺寸")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText()=="50.017000"),"Single-band n6 minimum dimension copy");
+            w.Settings.CopyUnit="μm";w.ApplySettings();
+            Descendants<Button>(shaftPage).Single(b=>Equals(b.Content,"复制下偏差")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText()=="17.000000"),"Single-band n6 lower deviation copy um");
+            var holePage=w.SizePages["hole"];w.Navigate("hole");
+            Descendants<Button>(holePage).Single(b=>Equals(b.Content,"复制上偏差")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText()=="25.000000"),"Single-band H7 upper deviation copy um");
         }
         finally{Check(Pump(()=>{if(clipboard is null)Clipboard.Clear();else Clipboard.SetDataObject(clipboard,true);return true;}),"Restore clipboard");}
         var restartPath=Path.Combine(directory,"restart-test.json");var restartStore=new SettingsStore(restartPath);
@@ -84,7 +166,11 @@ internal static class ShellVerification
         w.Reset();Check(!w.Topmost&&w.Settings.Theme=="light"&&NumberDisplay.MinimumDecimals==0&&w.Settings.RememberInputs,"Reset defaults");
         Check(w.SizePages["shaft-fit"].Input.HoleZone=="G"&&w.Geometry.ViewModel.SelectedGradeCode=="6","Reset inputs");
         w.Navigate("geometry");Flush();
-        File.WriteAllText(Path.Combine(directory,"shell-verification.txt"),$"PASS: {checks} application-owned WPF checks. Six pages; light/dark/system; standard/large font; minimum window; 100%/150% rendering; no page scroll bars; invalid results/plot/copies; selection retention; settings, topmost, defaults and precision. No computer use, UI Automation or desktop capture APIs.");
+        w.Settings.LargeFont=true;w.ApplySettings();
+        var geometryLarge=new MainWindow();geometryLarge.Show();geometryLarge.UpdateLayout();w.ApplyFonts(geometryLarge);geometryLarge.UpdateLayout();
+        UiVerification.Run(geometryLarge,Path.Combine(directory,"geometry-large-regression"));geometryLarge.Close();
+        w.Settings.LargeFont=false;w.ApplySettings();
+        File.WriteAllText(Path.Combine(directory,"shell-verification.txt"),$"PASS: {checks} application-owned WPF checks. Six pages; matrix metadata and interactions; themed matrix contrast >=4.5; stable repeatable font scaling; aligned numeric columns; primary copy actions; free-mode switching; light/dark/system; standard/large font; minimum window; 100%/150% rendering; clipboard copies; settings and precision. No computer use, UI Automation or desktop capture APIs.");
     }
     private static void Render(ShellWindow w,string path,double scale)
     {

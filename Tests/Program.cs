@@ -48,4 +48,5 @@ Check(QueryResult.Format(0.0001m) == "0.0001", "Small decimal formatting");
 Check(QueryResult.Format(0.0100m) == "0.01", "Trailing zeros");
 GeneralTests.Run(catalog, Check);
 SizeTests.Run(Check);
+RefactorTests.Run(Check);
 Console.WriteLine($"PASS: {checks} checks; numeric 757 cells; H/K/L 45 cells; 7283 hole/shaft cells, 56 zones; independent IT-width and fit-result crosschecks; boundaries, units, invalid inputs, guidance, settings and precision.");

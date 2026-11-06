@@ -72,6 +72,26 @@ internal static class SizeTests
         }
         foreach(var b in Enum.GetValues<BasisSystem>())foreach(var preset in CommonFits.For(b))
         {check(catalog.CalculateFit(b,50,preset.HoleZone,preset.HoleGrade,preset.ShaftZone,preset.ShaftGrade).Hole.NominalMm==50,"Checked preset at default size");}
+        foreach(var basis in Enum.GetValues<BasisSystem>())
+        {
+            var list=CommonFits.For(basis);check(list.Count(p=>p.IsPreferred)==13,"Verified priority count");
+            check(list.Select(p=>$"{p.HoleZone}{p.HoleGrade}/{p.ShaftZone}{p.ShaftGrade}").Distinct().Count()==list.Count,"One matrix entry per combination");
+            check(list.Any(p=>p.IsPreferred&&(basis==BasisSystem.Hole?p.HoleZone=="H"&&p.HoleGrade==7&&p.ShaftZone=="g"&&p.ShaftGrade==6:p.HoleZone=="G"&&p.HoleGrade==7&&p.ShaftZone=="h"&&p.ShaftGrade==6)),"Default precise sliding fits are preferred");
+        }
+        foreach(var kind in Enum.GetValues<FeatureKind>())
+        {
+            var bands=BandSelection.For(kind);
+            check(bands.Count==(kind==FeatureKind.Hole?105:116),"Complete collected band diagram");
+            check(bands.Count(b=>b.Rank==SelectionRank.Preferred)==13,"13 preferred single bands");
+            check(bands.Count(b=>b.Rank!=SelectionRank.Other)==(kind==FeatureKind.Hole?44:59),"Framed secondary and preferred bands");
+            check(bands.Count(b=>BandSelection.RecommendedAt(kind,600,b))==(kind==FeatureKind.Hole?31:41),"Large-size band diagram");
+            foreach(var band in bands)
+            {
+                check(catalog.Available(kind,50,band.Zone,band.Grade),"Small-band diagram maps to actual data");
+                if(BandSelection.RecommendedAt(kind,600,band)){check(catalog.Available(kind,600,band.Zone,band.Grade),"Large-band diagram maps to actual data");check(BandSelection.RankAt(600,band)==SelectionRank.Secondary,"No small-size ranking applied to large sizes");}
+            }
+            check(bands.Single(b=>b.Band==(kind==FeatureKind.Hole?"G8":"g8")).Rank==SelectionRank.Other,"Unframed g8/G8 remain last choice");
+        }
         check(NumberDisplay.Format(.00012345m,3)=="0.00012345","No truncation");
         check(NumberDisplay.Format(.01m,6)=="0.010000","Pad zeros");
         NumberDisplay.MinimumDecimals=6;var geometry=new ToleranceCatalog();

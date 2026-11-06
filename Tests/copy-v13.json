@@ -1,0 +1,1498 @@
+[
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "mm",
+    "Expected": "⌀50 g6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.009 / -0.025 mm   (-9 / -25 μm)\r\n极限尺寸 49.975 ～ 49.991 mm    公差 16 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "μm",
+    "Expected": "⌀50 g6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.009 / -0.025 mm   (-9 / -25 μm)\r\n极限尺寸 49.975 ～ 49.991 mm    公差 16 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "mm",
+    "Expected": "⌀50.000 g6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.009 / -0.025 mm   (-9.000 / -25.000 μm)\r\n极限尺寸 49.975 ～ 49.991 mm    公差 16.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "μm",
+    "Expected": "⌀50.000 g6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.009 / -0.025 mm   (-9.000 / -25.000 μm)\r\n极限尺寸 49.975 ～ 49.991 mm    公差 16.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "mm",
+    "Expected": "⌀50.0000 g6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.0090 / -0.0250 mm   (-9.0000 / -25.0000 μm)\r\n极限尺寸 49.9750 ～ 49.9910 mm    公差 16.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "μm",
+    "Expected": "⌀50.0000 g6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.0090 / -0.0250 mm   (-9.0000 / -25.0000 μm)\r\n极限尺寸 49.9750 ～ 49.9910 mm    公差 16.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "mm",
+    "Expected": "⌀50.000000 g6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.009000 / -0.025000 mm   (-9.000000 / -25.000000 μm)\r\n极限尺寸 49.975000 ～ 49.991000 mm    公差 16.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "μm",
+    "Expected": "⌀50.000000 g6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.009000 / -0.025000 mm   (-9.000000 / -25.000000 μm)\r\n极限尺寸 49.975000 ～ 49.991000 mm    公差 16.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "n",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "mm",
+    "Expected": "⌀50 n6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   +0.033 / +0.017 mm   (+33 / +17 μm)\r\n极限尺寸 50.017 ～ 50.033 mm    公差 16 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "n",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "μm",
+    "Expected": "⌀50 n6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   +0.033 / +0.017 mm   (+33 / +17 μm)\r\n极限尺寸 50.017 ～ 50.033 mm    公差 16 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "n",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "mm",
+    "Expected": "⌀50.000 n6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   +0.033 / +0.017 mm   (+33.000 / +17.000 μm)\r\n极限尺寸 50.017 ～ 50.033 mm    公差 16.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "n",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "μm",
+    "Expected": "⌀50.000 n6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   +0.033 / +0.017 mm   (+33.000 / +17.000 μm)\r\n极限尺寸 50.017 ～ 50.033 mm    公差 16.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "n",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "mm",
+    "Expected": "⌀50.0000 n6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   +0.0330 / +0.0170 mm   (+33.0000 / +17.0000 μm)\r\n极限尺寸 50.0170 ～ 50.0330 mm    公差 16.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "n",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "μm",
+    "Expected": "⌀50.0000 n6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   +0.0330 / +0.0170 mm   (+33.0000 / +17.0000 μm)\r\n极限尺寸 50.0170 ～ 50.0330 mm    公差 16.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "n",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "mm",
+    "Expected": "⌀50.000000 n6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   +0.033000 / +0.017000 mm   (+33.000000 / +17.000000 μm)\r\n极限尺寸 50.017000 ～ 50.033000 mm    公差 16.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "n",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "μm",
+    "Expected": "⌀50.000000 n6\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   +0.033000 / +0.017000 mm   (+33.000000 / +17.000000 μm)\r\n极限尺寸 50.017000 ～ 50.033000 mm    公差 16.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "mm",
+    "Expected": "⌀50 H7\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.025 / 0 mm   (+25 / 0 μm)\r\n极限尺寸 50 ～ 50.025 mm    公差 25 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "μm",
+    "Expected": "⌀50 H7\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.025 / 0 mm   (+25 / 0 μm)\r\n极限尺寸 50 ～ 50.025 mm    公差 25 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "mm",
+    "Expected": "⌀50.000 H7\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.025 / 0.000 mm   (+25.000 / 0.000 μm)\r\n极限尺寸 50.000 ～ 50.025 mm    公差 25.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "μm",
+    "Expected": "⌀50.000 H7\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.025 / 0.000 mm   (+25.000 / 0.000 μm)\r\n极限尺寸 50.000 ～ 50.025 mm    公差 25.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "mm",
+    "Expected": "⌀50.0000 H7\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.0250 / 0.0000 mm   (+25.0000 / 0.0000 μm)\r\n极限尺寸 50.0000 ～ 50.0250 mm    公差 25.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "μm",
+    "Expected": "⌀50.0000 H7\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.0250 / 0.0000 mm   (+25.0000 / 0.0000 μm)\r\n极限尺寸 50.0000 ～ 50.0250 mm    公差 25.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "mm",
+    "Expected": "⌀50.000000 H7\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.025000 / 0.000000 mm   (+25.000000 / 0.000000 μm)\r\n极限尺寸 50.000000 ～ 50.025000 mm    公差 25.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "μm",
+    "Expected": "⌀50.000000 H7\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.025000 / 0.000000 mm   (+25.000000 / 0.000000 μm)\r\n极限尺寸 50.000000 ～ 50.025000 mm    公差 25.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "G",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "mm",
+    "Expected": "⌀50 G7/h6\r\n间隙配合 · 间隙 0.009 ～ 0.05 mm\r\n孔 ES / EI   +0.034 / +0.009 mm   (+34 / +9 μm)\r\n极限尺寸 50.009 ～ 50.034 mm    公差 25 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n轴 es / ei   0 / -0.016 mm   (0 / -16 μm)\r\n极限尺寸 49.984 ～ 50 mm    公差 16 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "G",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "μm",
+    "Expected": "⌀50 G7/h6\r\n间隙配合 · 间隙 0.009 ～ 0.05 mm\r\n孔 ES / EI   +0.034 / +0.009 mm   (+34 / +9 μm)\r\n极限尺寸 50.009 ～ 50.034 mm    公差 25 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n轴 es / ei   0 / -0.016 mm   (0 / -16 μm)\r\n极限尺寸 49.984 ～ 50 mm    公差 16 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "G",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "mm",
+    "Expected": "⌀50.000 G7/h6\r\n间隙配合 · 间隙 0.009 ～ 0.050 mm\r\n孔 ES / EI   +0.034 / +0.009 mm   (+34.000 / +9.000 μm)\r\n极限尺寸 50.009 ～ 50.034 mm    公差 25.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n轴 es / ei   0.000 / -0.016 mm   (0.000 / -16.000 μm)\r\n极限尺寸 49.984 ～ 50.000 mm    公差 16.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "G",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "μm",
+    "Expected": "⌀50.000 G7/h6\r\n间隙配合 · 间隙 0.009 ～ 0.050 mm\r\n孔 ES / EI   +0.034 / +0.009 mm   (+34.000 / +9.000 μm)\r\n极限尺寸 50.009 ～ 50.034 mm    公差 25.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n轴 es / ei   0.000 / -0.016 mm   (0.000 / -16.000 μm)\r\n极限尺寸 49.984 ～ 50.000 mm    公差 16.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "G",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "mm",
+    "Expected": "⌀50.0000 G7/h6\r\n间隙配合 · 间隙 0.0090 ～ 0.0500 mm\r\n孔 ES / EI   +0.0340 / +0.0090 mm   (+34.0000 / +9.0000 μm)\r\n极限尺寸 50.0090 ～ 50.0340 mm    公差 25.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n轴 es / ei   0.0000 / -0.0160 mm   (0.0000 / -16.0000 μm)\r\n极限尺寸 49.9840 ～ 50.0000 mm    公差 16.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "G",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "μm",
+    "Expected": "⌀50.0000 G7/h6\r\n间隙配合 · 间隙 0.0090 ～ 0.0500 mm\r\n孔 ES / EI   +0.0340 / +0.0090 mm   (+34.0000 / +9.0000 μm)\r\n极限尺寸 50.0090 ～ 50.0340 mm    公差 25.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n轴 es / ei   0.0000 / -0.0160 mm   (0.0000 / -16.0000 μm)\r\n极限尺寸 49.9840 ～ 50.0000 mm    公差 16.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "G",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "mm",
+    "Expected": "⌀50.000000 G7/h6\r\n间隙配合 · 间隙 0.009000 ～ 0.050000 mm\r\n孔 ES / EI   +0.034000 / +0.009000 mm   (+34.000000 / +9.000000 μm)\r\n极限尺寸 50.009000 ～ 50.034000 mm    公差 25.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n轴 es / ei   0.000000 / -0.016000 mm   (0.000000 / -16.000000 μm)\r\n极限尺寸 49.984000 ～ 50.000000 mm    公差 16.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "shaft-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "G",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "μm",
+    "Expected": "⌀50.000000 G7/h6\r\n间隙配合 · 间隙 0.009000 ～ 0.050000 mm\r\n孔 ES / EI   +0.034000 / +0.009000 mm   (+34.000000 / +9.000000 μm)\r\n极限尺寸 50.009000 ～ 50.034000 mm    公差 25.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n轴 es / ei   0.000000 / -0.016000 mm   (0.000000 / -16.000000 μm)\r\n极限尺寸 49.984000 ～ 50.000000 mm    公差 16.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "mm",
+    "Expected": "⌀50 H7/g6\r\n间隙配合 · 间隙 0.009 ～ 0.05 mm\r\n孔 ES / EI   +0.025 / 0 mm   (+25 / 0 μm)\r\n极限尺寸 50 ～ 50.025 mm    公差 25 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n轴 es / ei   -0.009 / -0.025 mm   (-9 / -25 μm)\r\n极限尺寸 49.975 ～ 49.991 mm    公差 16 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "μm",
+    "Expected": "⌀50 H7/g6\r\n间隙配合 · 间隙 0.009 ～ 0.05 mm\r\n孔 ES / EI   +0.025 / 0 mm   (+25 / 0 μm)\r\n极限尺寸 50 ～ 50.025 mm    公差 25 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n轴 es / ei   -0.009 / -0.025 mm   (-9 / -25 μm)\r\n极限尺寸 49.975 ～ 49.991 mm    公差 16 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "mm",
+    "Expected": "⌀50.000 H7/g6\r\n间隙配合 · 间隙 0.009 ～ 0.050 mm\r\n孔 ES / EI   +0.025 / 0.000 mm   (+25.000 / 0.000 μm)\r\n极限尺寸 50.000 ～ 50.025 mm    公差 25.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n轴 es / ei   -0.009 / -0.025 mm   (-9.000 / -25.000 μm)\r\n极限尺寸 49.975 ～ 49.991 mm    公差 16.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "μm",
+    "Expected": "⌀50.000 H7/g6\r\n间隙配合 · 间隙 0.009 ～ 0.050 mm\r\n孔 ES / EI   +0.025 / 0.000 mm   (+25.000 / 0.000 μm)\r\n极限尺寸 50.000 ～ 50.025 mm    公差 25.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n轴 es / ei   -0.009 / -0.025 mm   (-9.000 / -25.000 μm)\r\n极限尺寸 49.975 ～ 49.991 mm    公差 16.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "mm",
+    "Expected": "⌀50.0000 H7/g6\r\n间隙配合 · 间隙 0.0090 ～ 0.0500 mm\r\n孔 ES / EI   +0.0250 / 0.0000 mm   (+25.0000 / 0.0000 μm)\r\n极限尺寸 50.0000 ～ 50.0250 mm    公差 25.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n轴 es / ei   -0.0090 / -0.0250 mm   (-9.0000 / -25.0000 μm)\r\n极限尺寸 49.9750 ～ 49.9910 mm    公差 16.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "μm",
+    "Expected": "⌀50.0000 H7/g6\r\n间隙配合 · 间隙 0.0090 ～ 0.0500 mm\r\n孔 ES / EI   +0.0250 / 0.0000 mm   (+25.0000 / 0.0000 μm)\r\n极限尺寸 50.0000 ～ 50.0250 mm    公差 25.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n轴 es / ei   -0.0090 / -0.0250 mm   (-9.0000 / -25.0000 μm)\r\n极限尺寸 49.9750 ～ 49.9910 mm    公差 16.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "mm",
+    "Expected": "⌀50.000000 H7/g6\r\n间隙配合 · 间隙 0.009000 ～ 0.050000 mm\r\n孔 ES / EI   +0.025000 / 0.000000 mm   (+25.000000 / 0.000000 μm)\r\n极限尺寸 50.000000 ～ 50.025000 mm    公差 25.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n轴 es / ei   -0.009000 / -0.025000 mm   (-9.000000 / -25.000000 μm)\r\n极限尺寸 49.975000 ～ 49.991000 mm    公差 16.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "μm",
+    "Expected": "⌀50.000000 H7/g6\r\n间隙配合 · 间隙 0.009000 ～ 0.050000 mm\r\n孔 ES / EI   +0.025000 / 0.000000 mm   (+25.000000 / 0.000000 μm)\r\n极限尺寸 50.000000 ～ 50.025000 mm    公差 25.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n轴 es / ei   -0.009000 / -0.025000 mm   (-9.000000 / -25.000000 μm)\r\n极限尺寸 49.975000 ～ 49.991000 mm    公差 16.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "p",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "mm",
+    "Expected": "⌀50 H7/p6\r\n过盈配合 · 过盈 0.001 ～ 0.042 mm\r\n孔 ES / EI   +0.025 / 0 mm   (+25 / 0 μm)\r\n极限尺寸 50 ～ 50.025 mm    公差 25 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n轴 es / ei   +0.042 / +0.026 mm   (+42 / +26 μm)\r\n极限尺寸 50.026 ～ 50.042 mm    公差 16 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "p",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "μm",
+    "Expected": "⌀50 H7/p6\r\n过盈配合 · 过盈 0.001 ～ 0.042 mm\r\n孔 ES / EI   +0.025 / 0 mm   (+25 / 0 μm)\r\n极限尺寸 50 ～ 50.025 mm    公差 25 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n轴 es / ei   +0.042 / +0.026 mm   (+42 / +26 μm)\r\n极限尺寸 50.026 ～ 50.042 mm    公差 16 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "p",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "mm",
+    "Expected": "⌀50.000 H7/p6\r\n过盈配合 · 过盈 0.001 ～ 0.042 mm\r\n孔 ES / EI   +0.025 / 0.000 mm   (+25.000 / 0.000 μm)\r\n极限尺寸 50.000 ～ 50.025 mm    公差 25.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n轴 es / ei   +0.042 / +0.026 mm   (+42.000 / +26.000 μm)\r\n极限尺寸 50.026 ～ 50.042 mm    公差 16.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "p",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "μm",
+    "Expected": "⌀50.000 H7/p6\r\n过盈配合 · 过盈 0.001 ～ 0.042 mm\r\n孔 ES / EI   +0.025 / 0.000 mm   (+25.000 / 0.000 μm)\r\n极限尺寸 50.000 ～ 50.025 mm    公差 25.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n轴 es / ei   +0.042 / +0.026 mm   (+42.000 / +26.000 μm)\r\n极限尺寸 50.026 ～ 50.042 mm    公差 16.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "p",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "mm",
+    "Expected": "⌀50.0000 H7/p6\r\n过盈配合 · 过盈 0.0010 ～ 0.0420 mm\r\n孔 ES / EI   +0.0250 / 0.0000 mm   (+25.0000 / 0.0000 μm)\r\n极限尺寸 50.0000 ～ 50.0250 mm    公差 25.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n轴 es / ei   +0.0420 / +0.0260 mm   (+42.0000 / +26.0000 μm)\r\n极限尺寸 50.0260 ～ 50.0420 mm    公差 16.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "p",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "μm",
+    "Expected": "⌀50.0000 H7/p6\r\n过盈配合 · 过盈 0.0010 ～ 0.0420 mm\r\n孔 ES / EI   +0.0250 / 0.0000 mm   (+25.0000 / 0.0000 μm)\r\n极限尺寸 50.0000 ～ 50.0250 mm    公差 25.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n轴 es / ei   +0.0420 / +0.0260 mm   (+42.0000 / +26.0000 μm)\r\n极限尺寸 50.0260 ～ 50.0420 mm    公差 16.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "p",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "mm",
+    "Expected": "⌀50.000000 H7/p6\r\n过盈配合 · 过盈 0.001000 ～ 0.042000 mm\r\n孔 ES / EI   +0.025000 / 0.000000 mm   (+25.000000 / 0.000000 μm)\r\n极限尺寸 50.000000 ～ 50.025000 mm    公差 25.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n轴 es / ei   +0.042000 / +0.026000 mm   (+42.000000 / +26.000000 μm)\r\n极限尺寸 50.026000 ～ 50.042000 mm    公差 16.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "p",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "μm",
+    "Expected": "⌀50.000000 H7/p6\r\n过盈配合 · 过盈 0.001000 ～ 0.042000 mm\r\n孔 ES / EI   +0.025000 / 0.000000 mm   (+25.000000 / 0.000000 μm)\r\n极限尺寸 50.000000 ～ 50.025000 mm    公差 25.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n轴 es / ei   +0.042000 / +0.026000 mm   (+42.000000 / +26.000000 μm)\r\n极限尺寸 50.026000 ～ 50.042000 mm    公差 16.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "k",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "mm",
+    "Expected": "⌀50 H7/k6\r\n过渡配合 · 最大间隙 0.023 mm；最大过盈 0.018 mm\r\n孔 ES / EI   +0.025 / 0 mm   (+25 / 0 μm)\r\n极限尺寸 50 ～ 50.025 mm    公差 25 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n轴 es / ei   +0.018 / +0.002 mm   (+18 / +2 μm)\r\n极限尺寸 50.002 ～ 50.018 mm    公差 16 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "k",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "μm",
+    "Expected": "⌀50 H7/k6\r\n过渡配合 · 最大间隙 0.023 mm；最大过盈 0.018 mm\r\n孔 ES / EI   +0.025 / 0 mm   (+25 / 0 μm)\r\n极限尺寸 50 ～ 50.025 mm    公差 25 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n轴 es / ei   +0.018 / +0.002 mm   (+18 / +2 μm)\r\n极限尺寸 50.002 ～ 50.018 mm    公差 16 μm\r\n尺寸区间 30 < d/D ≤ 50 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "k",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "mm",
+    "Expected": "⌀50.000 H7/k6\r\n过渡配合 · 最大间隙 0.023 mm；最大过盈 0.018 mm\r\n孔 ES / EI   +0.025 / 0.000 mm   (+25.000 / 0.000 μm)\r\n极限尺寸 50.000 ～ 50.025 mm    公差 25.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n轴 es / ei   +0.018 / +0.002 mm   (+18.000 / +2.000 μm)\r\n极限尺寸 50.002 ～ 50.018 mm    公差 16.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "k",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "μm",
+    "Expected": "⌀50.000 H7/k6\r\n过渡配合 · 最大间隙 0.023 mm；最大过盈 0.018 mm\r\n孔 ES / EI   +0.025 / 0.000 mm   (+25.000 / 0.000 μm)\r\n极限尺寸 50.000 ～ 50.025 mm    公差 25.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n轴 es / ei   +0.018 / +0.002 mm   (+18.000 / +2.000 μm)\r\n极限尺寸 50.002 ～ 50.018 mm    公差 16.000 μm\r\n尺寸区间 30.000 < d/D ≤ 50.000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "k",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "mm",
+    "Expected": "⌀50.0000 H7/k6\r\n过渡配合 · 最大间隙 0.0230 mm；最大过盈 0.0180 mm\r\n孔 ES / EI   +0.0250 / 0.0000 mm   (+25.0000 / 0.0000 μm)\r\n极限尺寸 50.0000 ～ 50.0250 mm    公差 25.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n轴 es / ei   +0.0180 / +0.0020 mm   (+18.0000 / +2.0000 μm)\r\n极限尺寸 50.0020 ～ 50.0180 mm    公差 16.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "k",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "μm",
+    "Expected": "⌀50.0000 H7/k6\r\n过渡配合 · 最大间隙 0.0230 mm；最大过盈 0.0180 mm\r\n孔 ES / EI   +0.0250 / 0.0000 mm   (+25.0000 / 0.0000 μm)\r\n极限尺寸 50.0000 ～ 50.0250 mm    公差 25.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n轴 es / ei   +0.0180 / +0.0020 mm   (+18.0000 / +2.0000 μm)\r\n极限尺寸 50.0020 ～ 50.0180 mm    公差 16.0000 μm\r\n尺寸区间 30.0000 < d/D ≤ 50.0000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "k",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "mm",
+    "Expected": "⌀50.000000 H7/k6\r\n过渡配合 · 最大间隙 0.023000 mm；最大过盈 0.018000 mm\r\n孔 ES / EI   +0.025000 / 0.000000 mm   (+25.000000 / 0.000000 μm)\r\n极限尺寸 50.000000 ～ 50.025000 mm    公差 25.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n轴 es / ei   +0.018000 / +0.002000 mm   (+18.000000 / +2.000000 μm)\r\n极限尺寸 50.002000 ～ 50.018000 mm    公差 16.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：mm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole-fit",
+    "Input": {
+      "Nominal": "50",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "k",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "μm",
+    "Expected": "⌀50.000000 H7/k6\r\n过渡配合 · 最大间隙 0.023000 mm；最大过盈 0.018000 mm\r\n孔 ES / EI   +0.025000 / 0.000000 mm   (+25.000000 / 0.000000 μm)\r\n极限尺寸 50.000000 ～ 50.025000 mm    公差 25.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n轴 es / ei   +0.018000 / +0.002000 mm   (+18.000000 / +2.000000 μm)\r\n极限尺寸 50.002000 ～ 50.018000 mm    公差 16.000000 μm\r\n尺寸区间 30.000000 < d/D ≤ 50.000000 mm\r\n偏差复制单位：μm；尺寸始终为 mm。"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 1,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "mm",
+    "Expected": "⌀630 H1\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.009 / 0 mm   (+9 / 0 μm)\r\n极限尺寸 630 ～ 630.009 mm    公差 9 μm\r\n尺寸区间 500 < d/D ≤ 630 mm\r\n试用值"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 1,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "μm",
+    "Expected": "⌀630 H1\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.009 / 0 mm   (+9 / 0 μm)\r\n极限尺寸 630 ～ 630.009 mm    公差 9 μm\r\n尺寸区间 500 < d/D ≤ 630 mm\r\n试用值"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 1,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "mm",
+    "Expected": "⌀630.000 H1\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.009 / 0.000 mm   (+9.000 / 0.000 μm)\r\n极限尺寸 630.000 ～ 630.009 mm    公差 9.000 μm\r\n尺寸区间 500.000 < d/D ≤ 630.000 mm\r\n试用值"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 1,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "μm",
+    "Expected": "⌀630.000 H1\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.009 / 0.000 mm   (+9.000 / 0.000 μm)\r\n极限尺寸 630.000 ～ 630.009 mm    公差 9.000 μm\r\n尺寸区间 500.000 < d/D ≤ 630.000 mm\r\n试用值"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 1,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "mm",
+    "Expected": "⌀630.0000 H1\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.0090 / 0.0000 mm   (+9.0000 / 0.0000 μm)\r\n极限尺寸 630.0000 ～ 630.0090 mm    公差 9.0000 μm\r\n尺寸区间 500.0000 < d/D ≤ 630.0000 mm\r\n试用值"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 1,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "μm",
+    "Expected": "⌀630.0000 H1\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.0090 / 0.0000 mm   (+9.0000 / 0.0000 μm)\r\n极限尺寸 630.0000 ～ 630.0090 mm    公差 9.0000 μm\r\n尺寸区间 500.0000 < d/D ≤ 630.0000 mm\r\n试用值"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 1,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "mm",
+    "Expected": "⌀630.000000 H1\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.009000 / 0.000000 mm   (+9.000000 / 0.000000 μm)\r\n极限尺寸 630.000000 ～ 630.009000 mm    公差 9.000000 μm\r\n尺寸区间 500.000000 < d/D ≤ 630.000000 mm\r\n试用值"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 1,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "μm",
+    "Expected": "⌀630.000000 H1\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +0.009000 / 0.000000 mm   (+9.000000 / 0.000000 μm)\r\n极限尺寸 630.000000 ～ 630.009000 mm    公差 9.000000 μm\r\n尺寸区间 500.000000 < d/D ≤ 630.000000 mm\r\n试用值"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "355.0",
+      "HoleZone": "A",
+      "HoleGrade": 13,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "mm",
+    "Expected": "⌀355 A13\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +2 / +1.2 mm   (+2000 / +1200 μm)\r\n极限尺寸 356.2 ～ 357 mm    公差 800 μm\r\n尺寸区间 315 < d/D ≤ 355 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "355.0",
+      "HoleZone": "A",
+      "HoleGrade": 13,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "μm",
+    "Expected": "⌀355 A13\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +2 / +1.2 mm   (+2000 / +1200 μm)\r\n极限尺寸 356.2 ～ 357 mm    公差 800 μm\r\n尺寸区间 315 < d/D ≤ 355 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "355.0",
+      "HoleZone": "A",
+      "HoleGrade": 13,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "mm",
+    "Expected": "⌀355.000 A13\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +2.000 / +1.200 mm   (+2000.000 / +1200.000 μm)\r\n极限尺寸 356.200 ～ 357.000 mm    公差 800.000 μm\r\n尺寸区间 315.000 < d/D ≤ 355.000 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "355.0",
+      "HoleZone": "A",
+      "HoleGrade": 13,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "μm",
+    "Expected": "⌀355.000 A13\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +2.000 / +1.200 mm   (+2000.000 / +1200.000 μm)\r\n极限尺寸 356.200 ～ 357.000 mm    公差 800.000 μm\r\n尺寸区间 315.000 < d/D ≤ 355.000 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "355.0",
+      "HoleZone": "A",
+      "HoleGrade": 13,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "mm",
+    "Expected": "⌀355.0000 A13\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +2.0000 / +1.2000 mm   (+2000.0000 / +1200.0000 μm)\r\n极限尺寸 356.2000 ～ 357.0000 mm    公差 800.0000 μm\r\n尺寸区间 315.0000 < d/D ≤ 355.0000 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "355.0",
+      "HoleZone": "A",
+      "HoleGrade": 13,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "μm",
+    "Expected": "⌀355.0000 A13\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +2.0000 / +1.2000 mm   (+2000.0000 / +1200.0000 μm)\r\n极限尺寸 356.2000 ～ 357.0000 mm    公差 800.0000 μm\r\n尺寸区间 315.0000 < d/D ≤ 355.0000 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "355.0",
+      "HoleZone": "A",
+      "HoleGrade": 13,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "mm",
+    "Expected": "⌀355.000000 A13\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +2.000000 / +1.200000 mm   (+2000.000000 / +1200.000000 μm)\r\n极限尺寸 356.200000 ～ 357.000000 mm    公差 800.000000 μm\r\n尺寸区间 315.000000 < d/D ≤ 355.000000 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "hole",
+    "Input": {
+      "Nominal": "355.0",
+      "HoleZone": "A",
+      "HoleGrade": 13,
+      "ShaftZone": "g",
+      "ShaftGrade": 6,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "μm",
+    "Expected": "⌀355.000000 A13\r\n孔：上偏差 ES，下偏差 EI\r\n孔 ES / EI   +2.000000 / +1.200000 mm   (+2000.000000 / +1200.000000 μm)\r\n极限尺寸 356.200000 ～ 357.000000 mm    公差 800.000000 μm\r\n尺寸区间 315.000000 < d/D ≤ 355.000000 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 1,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "mm",
+    "Expected": "⌀630 h1\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   0 / -0.009 mm   (0 / -9 μm)\r\n极限尺寸 629.991 ～ 630 mm    公差 9 μm\r\n尺寸区间 500 < d/D ≤ 630 mm\r\n试用值"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 1,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "μm",
+    "Expected": "⌀630 h1\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   0 / -0.009 mm   (0 / -9 μm)\r\n极限尺寸 629.991 ～ 630 mm    公差 9 μm\r\n尺寸区间 500 < d/D ≤ 630 mm\r\n试用值"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 1,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "mm",
+    "Expected": "⌀630.000 h1\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   0.000 / -0.009 mm   (0.000 / -9.000 μm)\r\n极限尺寸 629.991 ～ 630.000 mm    公差 9.000 μm\r\n尺寸区间 500.000 < d/D ≤ 630.000 mm\r\n试用值"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 1,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "μm",
+    "Expected": "⌀630.000 h1\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   0.000 / -0.009 mm   (0.000 / -9.000 μm)\r\n极限尺寸 629.991 ～ 630.000 mm    公差 9.000 μm\r\n尺寸区间 500.000 < d/D ≤ 630.000 mm\r\n试用值"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 1,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "mm",
+    "Expected": "⌀630.0000 h1\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   0.0000 / -0.0090 mm   (0.0000 / -9.0000 μm)\r\n极限尺寸 629.9910 ～ 630.0000 mm    公差 9.0000 μm\r\n尺寸区间 500.0000 < d/D ≤ 630.0000 mm\r\n试用值"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 1,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "μm",
+    "Expected": "⌀630.0000 h1\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   0.0000 / -0.0090 mm   (0.0000 / -9.0000 μm)\r\n极限尺寸 629.9910 ～ 630.0000 mm    公差 9.0000 μm\r\n尺寸区间 500.0000 < d/D ≤ 630.0000 mm\r\n试用值"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 1,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "mm",
+    "Expected": "⌀630.000000 h1\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   0.000000 / -0.009000 mm   (0.000000 / -9.000000 μm)\r\n极限尺寸 629.991000 ～ 630.000000 mm    公差 9.000000 μm\r\n尺寸区间 500.000000 < d/D ≤ 630.000000 mm\r\n试用值"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "630.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "h",
+      "ShaftGrade": 1,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "μm",
+    "Expected": "⌀630.000000 h1\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   0.000000 / -0.009000 mm   (0.000000 / -9.000000 μm)\r\n极限尺寸 629.991000 ～ 630.000000 mm    公差 9.000000 μm\r\n尺寸区间 500.000000 < d/D ≤ 630.000000 mm\r\n试用值"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "315.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "f",
+      "ShaftGrade": 9,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "mm",
+    "Expected": "⌀315 f9\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.056 / -0.185 mm   (-56 / -185 μm)\r\n极限尺寸 314.815 ～ 314.944 mm    公差 129 μm\r\n尺寸区间 250 < d/D ≤ 315 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "315.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "f",
+      "ShaftGrade": 9,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 0,
+    "Unit": "μm",
+    "Expected": "⌀315 f9\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.056 / -0.185 mm   (-56 / -185 μm)\r\n极限尺寸 314.815 ～ 314.944 mm    公差 129 μm\r\n尺寸区间 250 < d/D ≤ 315 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "315.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "f",
+      "ShaftGrade": 9,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "mm",
+    "Expected": "⌀315.000 f9\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.056 / -0.185 mm   (-56.000 / -185.000 μm)\r\n极限尺寸 314.815 ～ 314.944 mm    公差 129.000 μm\r\n尺寸区间 250.000 < d/D ≤ 315.000 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "315.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "f",
+      "ShaftGrade": 9,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 3,
+    "Unit": "μm",
+    "Expected": "⌀315.000 f9\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.056 / -0.185 mm   (-56.000 / -185.000 μm)\r\n极限尺寸 314.815 ～ 314.944 mm    公差 129.000 μm\r\n尺寸区间 250.000 < d/D ≤ 315.000 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "315.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "f",
+      "ShaftGrade": 9,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "mm",
+    "Expected": "⌀315.0000 f9\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.0560 / -0.1850 mm   (-56.0000 / -185.0000 μm)\r\n极限尺寸 314.8150 ～ 314.9440 mm    公差 129.0000 μm\r\n尺寸区间 250.0000 < d/D ≤ 315.0000 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "315.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "f",
+      "ShaftGrade": 9,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 4,
+    "Unit": "μm",
+    "Expected": "⌀315.0000 f9\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.0560 / -0.1850 mm   (-56.0000 / -185.0000 μm)\r\n极限尺寸 314.8150 ～ 314.9440 mm    公差 129.0000 μm\r\n尺寸区间 250.0000 < d/D ≤ 315.0000 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "315.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "f",
+      "ShaftGrade": 9,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "mm",
+    "Expected": "⌀315.000000 f9\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.056000 / -0.185000 mm   (-56.000000 / -185.000000 μm)\r\n极限尺寸 314.815000 ～ 314.944000 mm    公差 129.000000 μm\r\n尺寸区间 250.000000 < d/D ≤ 315.000000 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  },
+  {
+    "PageId": "shaft",
+    "Input": {
+      "Nominal": "315.0",
+      "HoleZone": "H",
+      "HoleGrade": 7,
+      "ShaftZone": "f",
+      "ShaftGrade": 9,
+      "TypeId": "flatness",
+      "GradeCode": "6",
+      "Parameter": "100",
+      "SizeTolerance": ""
+    },
+    "Decimals": 6,
+    "Unit": "μm",
+    "Expected": "⌀315.000000 f9\r\n轴：上偏差 es，下偏差 ei\r\n轴 es / ei   -0.056000 / -0.185000 mm   (-56.000000 / -185.000000 μm)\r\n极限尺寸 314.815000 ～ 314.944000 mm    公差 129.000000 μm\r\n尺寸区间 250.000000 < d/D ≤ 315.000000 mm\r\n收录偏差宽度与同级标准公差不同，请确认后使用"
+  }
+]

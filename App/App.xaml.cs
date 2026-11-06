@@ -7,6 +7,7 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        Appearance.Apply(false);
         DispatcherUnhandledException += (_, args) =>
         {
             MessageBox.Show($"操作未完成：{args.Exception.Message}", "几何公差查询工具", MessageBoxButton.OK, MessageBoxImage.Error);
