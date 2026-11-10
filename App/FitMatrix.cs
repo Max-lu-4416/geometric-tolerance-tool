@@ -17,26 +17,31 @@ internal sealed partial class SizePage
 
     private (TextBox,TextBlock,TextBlock,TextBlock,TextBlock) BuildQueryLayout()
     {
-        foreach(double height in new[]{52d,32d,20d,344d,8d,244d})RowDefinitions.Add(new(){Height=new GridLength(height)});
+        foreach(double height in new[]{52d,32d,0d,312d,8d,276d})RowDefinitions.Add(new(){Height=new GridLength(height)});
         var toolbar=new Grid();Children.Add(toolbar);
-        foreach(double width in new[]{174d,98d,124d,42d,742d})toolbar.ColumnDefinitions.Add(new(){Width=new GridLength(width)});
-        toolbar.Children.Add(UI.Text(ShellWindow.PageTitle(PageId),24,FontWeights.Medium));
-        var label=UI.Text("公称尺寸",14);label.VerticalAlignment=VerticalAlignment.Center;SetColumn(label,1);toolbar.Children.Add(label);
-        var input=new TextBox{Text=Input.Nominal,Height=44,VerticalAlignment=VerticalAlignment.Top};SetColumn(input,2);toolbar.Children.Add(input);
-        var unit=UI.Text("mm",12,margin:new Thickness(8,0,0,0));unit.VerticalAlignment=VerticalAlignment.Center;SetColumn(unit,3);toolbar.Children.Add(unit);
-        var title=UI.Text("",24,FontWeights.Medium,new Thickness(20,0,0,0));title.VerticalAlignment=VerticalAlignment.Center;title.TextWrapping=TextWrapping.NoWrap;title.TextTrimming=TextTrimming.CharacterEllipsis;SetColumn(title,4);toolbar.Children.Add(title);
+        foreach(double width in new[]{98d,124d,42d,916d})toolbar.ColumnDefinitions.Add(new(){Width=new GridLength(width)});
+        var label=UI.Text("公称尺寸",14);label.VerticalAlignment=VerticalAlignment.Center;toolbar.Children.Add(label);
+        var input=new TextBox{Text=Input.Nominal,Height=44,VerticalAlignment=VerticalAlignment.Top};SetColumn(input,1);toolbar.Children.Add(input);
+        System.Windows.Automation.AutomationProperties.SetName(input,"公称尺寸 / mm");
+        System.Windows.Automation.AutomationProperties.SetHelpText(input,"输入大于 0 且不超过 3150 的十进制尺寸；有效范围依所选公差带而定。");
+        var unit=UI.Text("mm",12,margin:new Thickness(8,0,0,0));unit.VerticalAlignment=VerticalAlignment.Center;SetColumn(unit,2);toolbar.Children.Add(unit);
+        var title=UI.Text("",24,FontWeights.Medium,new Thickness(20,0,0,0));title.VerticalAlignment=VerticalAlignment.Center;title.TextWrapping=TextWrapping.NoWrap;title.TextTrimming=TextTrimming.CharacterEllipsis;title.Margin=new Thickness(0);titleCopy=new(title,v=>shell.Copy(v.Text,v.SuccessMessage));titleCopy.Button.Margin=new Thickness(20,0,0,0);SetColumn(titleCopy.Button,3);toolbar.Children.Add(titleCopy.Button);
         input.TextChanged+=(_,_)=>{Input.Nominal=input.Text;Refresh();shell.SaveInputs();};
         var modes=new StackPanel{Orientation=Orientation.Horizontal};SetRow(modes,1);Children.Add(modes);
         matrixModeButton=new Button{Content=fit?"常用配合矩阵":"公差带矩阵",Padding=new Thickness(14,3,14,3),Margin=new Thickness(0,0,8,2)};
         freeModeButton=new Button{Content="自由选择",Padding=new Thickness(14,3,14,3),Margin=new Thickness(0,0,16,2)};
         modes.Children.Add(matrixModeButton);modes.Children.Add(freeModeButton);
+        ContextHelp.Attach(matrixModeButton,fit
+            ? "一格选择完整孔轴组合，同时选定孔、轴等级；空格为未收录常用组合。"+(basis==BasisSystem.Hole?"H8 子行用于区分轴等级。":"")+"常用配合矩阵适用尺寸不超过 500 mm，更大尺寸可使用自由选择。"
+            : "一格选定代号与 IT 等级；空白为选用矩阵未列出的组合，可切换自由选择查询完整收录值。优先、其次、最后表示选用顺序；蓝框与勾号表示当前选择。");
+        ContextHelp.Attach(freeModeButton,"自由选择包含全部有效收录代号和 IT1～IT18，最高至 3150 mm；不代表所有组合都有效。切换模式保留当前组合，尺寸变化时也保留选择；未收录时清空结果、图解并禁用复制。"+(fit?(basis==BasisSystem.Hole?"基孔制固定孔代号 H，孔轴等级分别选择。":"基轴制固定轴代号 h，孔轴等级分别选择。"):""));
         modes.Children.Add(Appearance.Legend("MatrixPreferred","优先"));
         if(!fit)modes.Children.Add(Appearance.Legend("MatrixSecondary","其次"));
         modes.Children.Add(Appearance.Legend("MatrixSurface",fit?"常用":"最后"));
         modes.Children.Add(Appearance.Legend("Accent","选中 ✓",true));
         modes.Children.Add(Appearance.Legend("MatrixDisabled","不可用"));
         matrixModeButton.Click+=(_,_)=>SetMatrixMode(true);freeModeButton.Click+=(_,_)=>SetMatrixMode(false);
-        matrixLegend=UI.Text("",12);matrixLegend.SetResourceReference(TextBlock.ForegroundProperty,"Muted");SetRow(matrixLegend,2);Children.Add(matrixLegend);
+        matrixLegend=UI.Text("",12);matrixLegend.Visibility=Visibility.Collapsed;matrixLegend.SetResourceReference(TextBlock.ForegroundProperty,"Muted");SetRow(matrixLegend,2);Children.Add(matrixLegend);
         matrixPanel=fit?BuildMatrix():BuildDeviationMatrix();SetRow(matrixPanel,3);Children.Add(matrixPanel);
         freePanel=new Grid();freePanel.ColumnDefinitions.Add(new(){Width=new GridLength(680)});freePanel.ColumnDefinitions.Add(new(){Width=new GridLength(24)});freePanel.ColumnDefinitions.Add(new());
         SetRow(freePanel,3);Children.Add(freePanel);
@@ -46,55 +51,11 @@ internal sealed partial class SizePage
         if(fit)
         {
         AddChoices(datum,basis==BasisSystem.Hole?FeatureKind.Hole:FeatureKind.Shaft,true);
-        datum.Children.Add(UI.Text(basis==BasisSystem.Hole?"基孔制固定孔代号 H，孔轴等级分别选择。":"基轴制固定轴代号 h，孔轴等级分别选择。",14,margin:new Thickness(0,20,0,12)));
-        datum.Children.Add(UI.Text("自由选择使用全部有效收录值，最高至 3150 mm。切换模式保留当前组合。",13));
-        }
-        else
-        {
-            datum.Children.Add(UI.Text("完整收录查询",16,FontWeights.Medium,new Thickness(0,16,0,12)));
-            datum.Children.Add(UI.Text("自由选择包含全部有效收录的代号与 IT1～IT18。矩阵覆盖常用选型，额外代号和等级可在此选择。",14));
-            datum.Children.Add(UI.Text("尺寸变化时保留原选择；未收录的组合会清空结果和图解，禁用复制。",13,margin:new Thickness(0,20,0,0)));
         }
         var lower=new Grid();lower.ColumnDefinitions.Add(new(){Width=new GridLength(780)});lower.ColumnDefinitions.Add(new(){Width=new GridLength(16)});lower.ColumnDefinitions.Add(new());SetRow(lower,5);Children.Add(lower);
-        var resultCard=UI.Card();resultCard.Padding=new Thickness(12);lower.Children.Add(resultCard);
-        var content=new Grid();resultCard.Child=content;
-        foreach(double height in new[]{32d,64d,20d,44d,32d,28d})content.RowDefinitions.Add(new(){Height=new GridLength(height)});
-        var resultSummary=UI.Text("",16,FontWeights.Medium);content.Children.Add(resultSummary);
-        var resultTable=new Grid();SetRow(resultTable,1);content.Children.Add(resultTable);
-        foreach(double width in new[]{50d,110d,110d,100d,160d,160d})resultTable.ColumnDefinitions.Add(new(){Width=new GridLength(width)});
-        foreach(double height in new[]{20d,22d,22d})resultTable.RowDefinitions.Add(new(){Height=new GridLength(height)});
-        string[] headers=fit?["要素","上偏差 / mm","下偏差 / mm","公差 / μm","最小尺寸 / mm","最大尺寸 / mm"]:["单位","上偏差","下偏差","公差","最小尺寸 / mm","最大尺寸 / mm"];
-        for(int col=0;col<headers.Length;col++){var t=UI.Text(headers[col],12);t.SetResourceReference(TextBlock.ForegroundProperty,"Secondary");if(col>0){t.TextAlignment=TextAlignment.Right;t.Margin=new Thickness(0,0,12,0);}SetColumn(t,col);resultTable.Children.Add(t);}
-        for(int row=0;row<2;row++)
-        {
-            var t=UI.Text(fit?(row==0?"孔":"轴"):(row==0?"mm":"μm"),12);SetRow(t,row+1);resultTable.Children.Add(t);
-            for(int col=0;col<5;col++)
-            {
-                t=UI.Text("—",14);t.FontFamily=new FontFamily("Consolas");t.TextWrapping=TextWrapping.NoWrap;
-                t.HorizontalAlignment=HorizontalAlignment.Stretch;t.TextAlignment=TextAlignment.Right;t.Margin=new Thickness(0,0,12,0);SetRow(t,row+1);SetColumn(t,col+1);resultTable.Children.Add(t);fitValues[row,col]=t;
-            }
-        }
-        intervalText=UI.Text("",12);intervalText.SetResourceReference(TextBlock.ForegroundProperty,"Muted");SetRow(intervalText,2);content.Children.Add(intervalText);
-        var gradeAdvice=UI.Text("",12);gradeAdvice.SetResourceReference(TextBlock.ForegroundProperty,"Secondary");SetRow(gradeAdvice,3);content.Children.Add(gradeAdvice);
-        var actions=new WrapPanel();SetRow(actions,4);content.Children.Add(actions);
-        if(fit)
-        {
-        AddCopy(actions,"孔 ES",()=>CopyNumber(Hole!.UpperUm));AddCopy(actions,"孔 EI",()=>CopyNumber(Hole!.LowerUm));
-        AddCopy(actions,"轴 es",()=>CopyNumber(Shaft!.UpperUm));AddCopy(actions,"轴 ei",()=>CopyNumber(Shaft!.LowerUm));
-        AddCopy(actions,"尺寸标注",()=>Heading);AddCopy(actions,"完整结果",()=>FullText);
-        }
-        else
-        {
-            AddCopy(actions,"上偏差",()=>DeviationCopy(true));AddCopy(actions,"下偏差",()=>DeviationCopy(false));
-            AddCopy(actions,"最大尺寸",()=>F((Hole??Shaft)!.MaximumMm));AddCopy(actions,"最小尺寸",()=>F((Hole??Shaft)!.MinimumMm));
-            AddCopy(actions,"尺寸标注",()=>Heading);AddCopy(actions,"完整结果",()=>FullText);
-        }
-        foreach(var button in actions.Children.OfType<Button>())
-        {button.Height=28;button.Padding=new Thickness(8,3,8,3);button.Margin=new Thickness(0,0,6,0);}
-        var resultNotice=UI.Text("",12);resultNotice.SetResourceReference(TextBlock.ForegroundProperty,"Muted");SetRow(resultNotice,5);content.Children.Add(resultNotice);
-        var plotCard=UI.Card();plotCard.Padding=new Thickness(12);SetColumn(plotCard,2);lower.Children.Add(plotCard);plotCard.Child=Plot;
+        var presentation=BuildResultPanel(lower);
         MatrixMode=fit?CommonFits.For(basis).Any(MatchesInput):BandSelection.For(singleKind).Any(MatchesDeviation);UpdateMode();
-        return(input,title,resultSummary,resultNotice,gradeAdvice);
+        return(input,title,presentation.Summary,presentation.Notice,presentation.Advice);
     }
     private Grid BuildMatrix()
     {
@@ -107,11 +68,10 @@ internal sealed partial class SizePage
         (int Datum,int Secondary)[] rows=basis==BasisSystem.Shaft
             ? Enumerable.Range(5,8).Select(g=>(Datum:g,Secondary:0)).ToArray()
             : new (int Datum,int Secondary)[]{(6,5),(7,6),(8,7),(8,8),(9,9),(10,10),(11,11),(12,12)};
-        foreach(var row in rows)grid.RowDefinitions.Add(new(){Height=new GridLength(40)});
+        foreach(var row in rows)grid.RowDefinitions.Add(new(){Height=new GridLength(36)});
         void Header(string value,int row,int col)
         {
-            var t=UI.Text(value,12,FontWeights.Medium);t.VerticalAlignment=VerticalAlignment.Center;t.HorizontalAlignment=HorizontalAlignment.Center;t.TextWrapping=TextWrapping.NoWrap;
-            SetRow(t,row);SetColumn(t,col);grid.Children.Add(t);
+            AddMatrixHeader(grid,value,row,col);
         }
         Header(basis==BasisSystem.Shaft?"基准轴":"基准孔",0,0);
         for(int col=0;col<zones.Length;col++)Header(zones[col],0,col+1);
@@ -136,8 +96,6 @@ internal sealed partial class SizePage
         }
         return grid;
     }
-    private void AlignResultColumns()
-    {for(int col=0;col<5;col++)Appearance.AlignColumn(new[]{fitValues[0,col],fitValues[1,col]});}
     private bool MatchesInput(FitPreset p)=>p.HoleZone==Input.HoleZone&&p.HoleGrade==Input.HoleGrade&&p.ShaftZone==Input.ShaftZone&&p.ShaftGrade==Input.ShaftGrade;
     internal void SelectPreset(FitPreset p)
     {
@@ -153,6 +111,12 @@ internal sealed partial class SizePage
         matrixModeButton.BorderThickness=new Thickness(1);freeModeButton.BorderThickness=new Thickness(1);
         matrixModeButton.SetResourceReference(Control.BackgroundProperty,MatrixMode?"SelectionSurface":"ControlSurface");freeModeButton.SetResourceReference(Control.BackgroundProperty,MatrixMode?"ControlSurface":"SelectionSurface");
     }
+    private void SetMatrixNotice(string text)
+    {
+        matrixLegend!.Text=text;
+        matrixLegend.Visibility=text.Length==0?Visibility.Collapsed:Visibility.Visible;
+        RowDefinitions[2].Height=new GridLength(text.Length==0?0:20);
+    }
     private void RefreshMatrix(decimal size,bool valid)
     {
         foreach(var cell in MatrixCells)
@@ -161,18 +125,17 @@ internal sealed partial class SizePage
             cell.Button.IsEnabled=valid&&size<=500&&catalog.Available(FeatureKind.Hole,size,p.HoleZone,p.HoleGrade)&&catalog.Available(FeatureKind.Shaft,size,p.ShaftZone,p.ShaftGrade);
             Appearance.MatrixState(cell.Button,cell.Check,p.IsPreferred?SelectionRank.Preferred:SelectionRank.Other,selected);
         }
-        matrixLegend!.Text=!valid?"请输入有效公称尺寸；当前选择保留。":!MatrixMode?"自由选择：孔轴等级分别点选，按实际收录范围查询；切换模式保留当前组合。":size>500?"常用矩阵适用尺寸 ≤ 500 mm；更大尺寸请使用自由选择。":basis==BasisSystem.Hole?"一格选择完整孔轴组合；H8 子行用于区分轴等级。空格为未收录常用组合。":"一格选择完整孔轴组合；空格为未收录常用组合。";
+        RefreshMatrixHeaders(MatrixCells.FirstOrDefault(c=>MatchesInput(c.Preset))?.Button);
+        SetMatrixNotice(!valid?"请输入有效公称尺寸；当前选择保留。":MatrixMode&&size>500?"常用矩阵适用尺寸 ≤ 500 mm；更大尺寸请使用自由选择。":"");
         var elements=new[]{Hole,Shaft};
-        for(int row=0;row<2;row++)
-        {
-            var r=elements[row];var values=r is null?null:new[]{S(r.UpperUm/1000m),S(r.LowerUm/1000m),F(r.ToleranceUm),F(r.MinimumMm),F(r.MaximumMm)};
-            for(int col=0;col<5;col++)fitValues[row,col].Text=values?[col]??"—";
-        }
-        AlignResultColumns();
-        intervalText!.Text=HasResult?$"孔：{Hole!.Interval}    轴：{Shaft!.Interval}":"结果、图解及复制已清空；所选组合仍保留。";
+        var display=elements.Select(r=>r is null?Enumerable.Repeat("—",5).ToArray():new[]{S(r.UpperUm/1000m),S(r.LowerUm/1000m),F(r.ToleranceUm),F(r.MinimumMm),F(r.MaximumMm)}).ToArray();
+        PresentColumns(display);
+        intervalText!.Text=HasResult?(Hole!.Interval==Shaft!.Interval?$"命中尺寸段：{Hole.Interval}":$"孔：{Hole.Interval}    轴：{Shaft.Interval}"):"所选组合已保留；结果、图解及复制已清空";
         var preset=CommonFits.For(basis).FirstOrDefault(MatchesInput);
-        advice.Text=$"{preset?.Use??"自由组合"}。孔 IT{Input.HoleGrade}：{SizeToleranceCatalog.GuidanceFor(Input.HoleGrade).Summary}；轴 IT{Input.ShaftGrade}：{SizeToleranceCatalog.GuidanceFor(Input.ShaftGrade).Summary}。实际配合性质以当前尺寸计算结果为准。";
-        advice.ToolTip=$"孔 IT{Input.HoleGrade}：{SizeToleranceCatalog.GradeAdvice(Input.HoleGrade)}\n轴 IT{Input.ShaftGrade}：{SizeToleranceCatalog.GradeAdvice(Input.ShaftGrade)}";
+        var holeAdvice=SizeToleranceCatalog.GuidanceFor(Input.HoleGrade).Summary;var shaftAdvice=SizeToleranceCatalog.GuidanceFor(Input.ShaftGrade).Summary;
+        advice.Text=!HasResult?Error:holeAdvice==shaftAdvice?$"{preset?.Use??"自由组合"} · 孔 IT{Input.HoleGrade} / 轴 IT{Input.ShaftGrade}：{holeAdvice}":$"{preset?.Use??"自由组合"} · 孔 IT{Input.HoleGrade}：{holeAdvice}；轴 IT{Input.ShaftGrade}：{shaftAdvice}";
+        advice.ToolTip=$"用途：{preset?.Use??"自由组合"}\n孔 IT{Input.HoleGrade}：{SizeToleranceCatalog.GradeAdvice(Input.HoleGrade)}\n轴 IT{Input.ShaftGrade}：{SizeToleranceCatalog.GradeAdvice(Input.ShaftGrade)}\n实际配合性质以当前尺寸计算结果为准。";
+        RefreshResultHeading();
         UpdateMode();
     }
 }

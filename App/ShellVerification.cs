@@ -17,6 +17,12 @@ internal static class ShellVerification
         void Flush()=>w.Dispatcher.Invoke(()=>w.UpdateLayout(),DispatcherPriority.ContextIdle);
         Check(w.ActivePage=="geometry","First launch geometry");
         RefactorVerification.Run(w,directory,Check);
+        FitPanelVerification.Run(w,directory,Check);
+        UniformResultVerification.Run(w,directory,Check);
+        ClickCopyVerification.Run(w,Check);
+        GeometryPolishVerification.Run(w,directory,Check);
+        InteractionPolishVerification.Run(w,directory,Check);
+        TextCleanupVerification.Run(w,directory,Check);
         foreach(var p in w.SizePages.Values)
         {
             Check(p.HasResult,"Default result "+p.PageId);
@@ -78,6 +84,11 @@ internal static class ShellVerification
                 double a=L(foreground),b=L(background);return (Math.Max(a,b)+.05)/(Math.Min(a,b)+.05);
             }
             foreach(string fill in new[]{"MatrixSurface","MatrixPreferred","MatrixSecondary"})Check(Contrast(UI.Brush("MatrixInk"),UI.Brush(fill))>=4.5,"Matrix text contrast "+theme+fill);
+            foreach(string fill in new[]{"Surface","ControlSurface","SelectionSurface","CanvasBackground"})
+            {
+                Check(Contrast(UI.Brush("Secondary"),UI.Brush(fill))>=4.5,"Supporting text contrast "+theme+fill);
+                Check(Contrast(UI.Brush("FocusRing"),UI.Brush(fill))>=3,"Keyboard focus contrast "+theme+fill);
+            }
             Check(Contrast(UI.Brush("PrimaryInk"),UI.Brush("PrimarySurface"))>=4.5,"Primary action text contrast");
             foreach(string page in new[]{"shaft","hole","shaft-fit","hole-fit","geometry","settings"})
             {
@@ -93,11 +104,13 @@ internal static class ShellVerification
                     Check(Math.Abs(fontSample.FontSize-size)<.0001,"Repeated font application does not compound");
                     Check(Math.Abs(size-(large?14*1.12:14))<.0001,"Stable base font scaling");
                     Check(sizePage.ResultNumbers.All(t=>t.TextAlignment==TextAlignment.Right),"Aligned numeric columns");
+                    if(sizePage.Fit is not null)foreach(var role in new[]{"FeatureHoleInk","FeatureShaftInk"})
+                        Check(Contrast(UI.Brush(role),UI.Brush("ControlSurface"))>=4.5,"Readable hole/shaft labels: "+role);
                     var cell=sizePage.DeviationCells.FirstOrDefault()?.Button??sizePage.MatrixCells.First().Button;
                     Check(((SolidColorBrush)cell.Foreground).Color==((SolidColorBrush)UI.Brush("MatrixInk")).Color,"Matrix text follows theme");
-                    var primary=Descendants<Button>(sizePage).Single(b=>Equals(b.Content,"复制尺寸标注"));
-                    Check(primary.Style==w.FindResource("PrimaryButton"),"Annotation copy is primary action");
-                    var caption=Descendants<TextBlock>(primary).Single(t=>t.Text=="复制尺寸标注");
+                    var primary=Descendants<Button>(sizePage).Single(b=>Equals(b.Content,"复制完整结果"));
+                    Check(primary.Style==w.FindResource("PrimaryButton"),"Complete result is primary action");
+                    var caption=Descendants<TextBlock>(primary).Single(t=>t.Text=="复制完整结果");
                     Check(Math.Abs(caption.FontSize-primary.FontSize)<.0001,"Template text inherits scaled font once");
                     decimal[] expected;
                     if(sizePage.Fit is {} f)expected=[f.Hole.UpperUm/1000m,f.Hole.LowerUm/1000m,f.Hole.ToleranceUm,f.Hole.MinimumMm,f.Hole.MaximumMm,f.Shaft.UpperUm/1000m,f.Shaft.LowerUm/1000m,f.Shaft.ToleranceUm,f.Shaft.MinimumMm,f.Shaft.MaximumMm];
@@ -108,6 +121,7 @@ internal static class ShellVerification
                     {var bounds=e.TransformToAncestor(sizePage).TransformBounds(new Rect(e.RenderSize));Check(bounds.Bottom<=700&&bounds.Right<=1180,"Page text within card: "+e.Text);}
                 }
                 Check(!Descendants<ScrollBar>(w).Any(s=>s.IsVisible),"No page scrolling "+page);
+                if(page=="settings")UniformResultVerification.CheckAbout(w,Check);
                 foreach(var e in Descendants<FrameworkElement>(w.Design).Where(e=>e.IsVisible&&(e is TextBlock||e is Button||e is TextBox)))
                 {
                     var r=e.TransformToAncestor(w.Design).TransformBounds(new Rect(e.RenderSize));
@@ -133,31 +147,6 @@ internal static class ShellVerification
         foreach(string page in new[]{"shaft","hole","shaft-fit","hole-fit","geometry","settings"}){w.Navigate(page);Flush();Check(!Descendants<ScrollBar>(w).Any(s=>s.IsVisible),"Minimum no scroll");Render(w,Path.Combine(directory,page+"-minimum-150.png"),1.5);}
         w.Settings.DecimalPlaces=6;w.Settings.CopyUnit="μm";w.Settings.Topmost=true;w.ApplySettings();Check(w.Topmost,"Topmost");
         w.Navigate("hole-fit");Check(w.SizePages["hole-fit"].FullText.Contains("0.009000"),"Precision setting reflects fit range");
-        bool Pump(Func<bool> action)
-        {
-            bool ok=false;var frame=new DispatcherFrame();var deadline=DateTime.UtcNow.AddSeconds(3);var timer=new DispatcherTimer{Interval=TimeSpan.FromMilliseconds(40)};
-            timer.Tick+=(_,_)=>{try{ok=action();}catch(ExternalException){}if(ok||DateTime.UtcNow>=deadline)frame.Continue=false;};timer.Start();Dispatcher.PushFrame(frame);timer.Stop();return ok;
-        }
-        IDataObject? clipboard=null;Check(Pump(()=>{clipboard=Clipboard.GetDataObject();return true;}),"Capture clipboard");
-        try
-        {
-            var page=w.SizePages["hole-fit"];
-            Button CopyButton(string name)=>Descendants<Button>(page).Single(b=>Equals(b.Content,name));
-            CopyButton("复制孔 ES").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText()=="25.000000"),"Um numeric copy");
-            w.Settings.CopyUnit="mm";w.ApplySettings();
-            CopyButton("复制轴 es").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText()=="-0.009000"),"Mm signed numeric copy");
-            CopyButton("复制尺寸标注").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText().Contains("H7/g6")),"Dimension annotation");
-            CopyButton("复制完整结果").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText().Contains("0.009000 ～ 0.050000 mm")&&!Clipboard.GetText().Contains("手册")),"Complete fit copy");
-            var shaftPage=w.SizePages["shaft"];w.Navigate("shaft");
-            shaftPage.DeviationCells.Single(c=>c.Band.Band=="n6").Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            Descendants<Button>(shaftPage).Single(b=>Equals(b.Content,"复制上偏差")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText()=="0.033000"),"Single-band n6 upper deviation copy mm");
-            Descendants<Button>(shaftPage).Single(b=>Equals(b.Content,"复制最小尺寸")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText()=="50.017000"),"Single-band n6 minimum dimension copy");
-            w.Settings.CopyUnit="μm";w.ApplySettings();
-            Descendants<Button>(shaftPage).Single(b=>Equals(b.Content,"复制下偏差")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText()=="17.000000"),"Single-band n6 lower deviation copy um");
-            var holePage=w.SizePages["hole"];w.Navigate("hole");
-            Descendants<Button>(holePage).Single(b=>Equals(b.Content,"复制上偏差")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(Pump(()=>Clipboard.GetText()=="25.000000"),"Single-band H7 upper deviation copy um");
-        }
-        finally{Check(Pump(()=>{if(clipboard is null)Clipboard.Clear();else Clipboard.SetDataObject(clipboard,true);return true;}),"Restore clipboard");}
         var restartPath=Path.Combine(directory,"restart-test.json");var restartStore=new SettingsStore(restartPath);
         var restartSettings=new ToolSettings{StartupPage="shaft-fit",LastPage="hole",Theme="dark",LargeFont=true,DecimalPlaces=4};restartSettings.Inputs["shaft-fit"]=new(){Nominal="51.25",HoleZone="G",ShaftZone="h",HoleGrade=8,ShaftGrade=7};
         Check(restartStore.Save(restartSettings),"Prepare restart");var restarted=new ShellWindow(restartPath);
@@ -172,7 +161,7 @@ internal static class ShellVerification
         w.Settings.LargeFont=false;w.ApplySettings();
         File.WriteAllText(Path.Combine(directory,"shell-verification.txt"),$"PASS: {checks} application-owned WPF checks. Six pages; matrix metadata and interactions; themed matrix contrast >=4.5; stable repeatable font scaling; aligned numeric columns; primary copy actions; free-mode switching; light/dark/system; standard/large font; minimum window; 100%/150% rendering; clipboard copies; settings and precision. No computer use, UI Automation or desktop capture APIs.");
     }
-    private static void Render(ShellWindow w,string path,double scale)
+    internal static void Render(ShellWindow w,string path,double scale)
     {
         w.UpdateLayout();var root=(FrameworkElement)w.Content;var v=new DrawingVisual();
         using(var dc=v.RenderOpen())

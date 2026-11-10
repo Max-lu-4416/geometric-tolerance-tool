@@ -12,6 +12,7 @@ internal sealed class ClipboardService : IDisposable
     private readonly DispatcherTimer? timer;
     private string? pending;
     private Action<string>? report;
+    private string successMessage="已复制到剪贴板。";
     private int attempts;
     private bool disposed;
     internal bool HasPending => pending is not null;
@@ -28,12 +29,13 @@ internal sealed class ClipboardService : IDisposable
         else this.schedule = schedule;
     }
 
-    internal void Copy(string text, Action<string> report)
+    internal void Copy(string text, Action<string> report, string? successMessage=null)
     {
         ObjectDisposedException.ThrowIf(disposed, this);
         Cancel();
         pending = text;
         this.report = report;
+        this.successMessage=successMessage??"已复制到剪贴板。";
         RetryPending();
     }
 
@@ -46,8 +48,9 @@ internal sealed class ClipboardService : IDisposable
         {
             write(pending);
             var completed = report;
+            var message=successMessage;
             Cancel();
-            completed?.Invoke("已复制到剪贴板。");
+            completed?.Invoke(message);
         }
         catch (ExternalException)
         {

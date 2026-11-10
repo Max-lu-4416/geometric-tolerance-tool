@@ -10,6 +10,7 @@
     <BooleanToVisibilityConverter x:Key="BoolVisibility" />
     <Style TargetType="TextBlock"><Setter Property="TextWrapping" Value="Wrap" /></Style>
     <Style TargetType="Button">
+      <Setter Property="FocusVisualStyle" Value="{StaticResource KeyboardFocus}" />
       <Setter Property="Padding" Value="16,12" /><Setter Property="Background" Value="{DynamicResource ControlSurface}" /><Setter Property="Foreground" Value="{DynamicResource Ink}" />
       <Setter Property="BorderBrush" Value="{DynamicResource Hairline}" /><Setter Property="BorderThickness" Value="1" /><Setter Property="Cursor" Value="Hand" /><Setter Property="FontSize" Value="14" />
       <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
@@ -17,13 +18,14 @@
         <ControlTemplate.Triggers>
           <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Opacity" Value="0.82" /></Trigger>
           <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource Accent}" /></Trigger>
-          <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Chrome" Property="Opacity" Value="0.55" /></Trigger>
+          <Trigger Property="IsPressed" Value="True"><Setter TargetName="Chrome" Property="Opacity" Value="0.70" /></Trigger>
+          <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Chrome" Property="Opacity" Value="0.55" /><Setter Property="Cursor" Value="Arrow" /></Trigger>
         </ControlTemplate.Triggers>
       </ControlTemplate></Setter.Value></Setter>
     </Style>
     <Style x:Key="ChoiceRadio" TargetType="RadioButton">
       <Setter Property="Foreground" Value="{DynamicResource Ink}" /><Setter Property="Background" Value="{DynamicResource Surface}" /><Setter Property="BorderBrush" Value="Transparent" /><Setter Property="Cursor" Value="Hand" />
-      <Setter Property="HorizontalContentAlignment" Value="Stretch" /><Setter Property="VerticalContentAlignment" Value="Center" /><Setter Property="FocusVisualStyle" Value="{x:Null}" />
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" /><Setter Property="VerticalContentAlignment" Value="Center" /><Setter Property="FocusVisualStyle" Value="{StaticResource KeyboardFocus}" />
       <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="RadioButton">
         <Border x:Name="Tile" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" /></Border>
         <ControlTemplate.Triggers>
@@ -34,7 +36,13 @@
         </ControlTemplate.Triggers>
       </ControlTemplate></Setter.Value></Setter>
     </Style>
-    <Style TargetType="TextBox"><Setter Property="FontSize" Value="20" /><Setter Property="FontFamily" Value="Segoe UI" /><Setter Property="Padding" Value="12,8" /><Setter Property="BorderBrush" Value="{DynamicResource Hairline}" /><Setter Property="Background" Value="{DynamicResource Surface}" /><Setter Property="Foreground" Value="{DynamicResource Ink}" /><Setter Property="CaretBrush" Value="{DynamicResource Ink}" /><Setter Property="BorderThickness" Value="1" /><Setter Property="MinHeight" Value="44" /><Setter Property="VerticalContentAlignment" Value="Center" /></Style>
+    <Style TargetType="TextBox">
+      <Setter Property="FontSize" Value="20" /><Setter Property="FontFamily" Value="Consolas" /><Setter Property="Padding" Value="12,8" /><Setter Property="BorderBrush" Value="{DynamicResource Hairline}" /><Setter Property="Background" Value="{DynamicResource Surface}" /><Setter Property="Foreground" Value="{DynamicResource Ink}" /><Setter Property="CaretBrush" Value="{DynamicResource Ink}" /><Setter Property="BorderThickness" Value="1" /><Setter Property="MinHeight" Value="44" /><Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="TextBox"><Grid>
+        <Border x:Name="Field" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4"><ScrollViewer x:Name="PART_ContentHost" Focusable="False" /></Border>
+        <Border x:Name="FieldFocus" BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="4" Visibility="Collapsed" IsHitTestVisible="False" />
+      </Grid><ControlTemplate.Triggers><Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="FieldFocus" Property="Visibility" Value="Visible" /></Trigger><Trigger Property="IsEnabled" Value="False"><Setter TargetName="Field" Property="Opacity" Value="0.55" /></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+    </Style>
     </ResourceDictionary>
   </Application.Resources>
 </Application>

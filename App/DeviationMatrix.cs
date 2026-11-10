@@ -15,11 +15,10 @@ internal sealed partial class SizePage
         string[] zones=order.Select(z=>singleKind==FeatureKind.Hole?z.ToUpperInvariant():z).ToArray();
         foreach(var zone in zones)grid.ColumnDefinitions.Add(new());
         grid.RowDefinitions.Add(new(){Height=new GridLength(24)});
-        foreach(int grade in Enumerable.Range(1,13))grid.RowDefinitions.Add(new(){Height=new GridLength(24)});
+        foreach(int grade in Enumerable.Range(1,13))grid.RowDefinitions.Add(new(){Height=new GridLength(22)});
         void Label(string value,int row,int col)
         {
-            var t=UI.Text(value,12,FontWeights.Medium);t.TextWrapping=TextWrapping.NoWrap;t.VerticalAlignment=VerticalAlignment.Center;t.HorizontalAlignment=HorizontalAlignment.Center;
-            SetRow(t,row);SetColumn(t,col);grid.Children.Add(t);
+            AddMatrixHeader(grid,value,row,col);
         }
         Label("IT 等级",0,0);for(int col=0;col<zones.Length;col++)Label(zones[col],0,col+1);
         var bands=BandSelection.For(singleKind);
@@ -57,22 +56,23 @@ internal sealed partial class SizePage
             var rank=BandSelection.RankAt(size,cell.Band);
             Appearance.MatrixState(cell.Button,cell.Check,rank,selected);
         }
-        matrixLegend!.Text=!valid?"请输入有效尺寸，当前公差带选择保留。":!MatrixMode?"自由选择包含全部有效代号和等级，包括额外代号及 IT14～IT18。":size>500?"500 < 尺寸 ≤ 3150 mm：使用大尺寸常用公差带范围；优先/其次/最后的三级顺序适用于尺寸 ≤ 500 mm。":"一格选定代号与等级；空白为选用矩阵未列出的组合，可切换自由选择查询完整收录值。";
+        RefreshMatrixHeaders(DeviationCells.FirstOrDefault(c=>MatchesDeviation(c.Band))?.Button);
+        SetMatrixNotice(!valid?"请输入有效尺寸，当前公差带选择保留。":MatrixMode&&size>500?"500 < 尺寸 ≤ 3150 mm：使用大尺寸常用公差带范围；优先/其次/最后的三级顺序适用于尺寸 ≤ 500 mm。":"");
         var r=Hole??Shaft;
         if(r is null)
         {
-            for(int row=0;row<2;row++)for(int col=0;col<5;col++)fitValues[row,col].Text="—";
+            PresentColumns([Enumerable.Repeat("—",5).ToArray(),Enumerable.Repeat("—",5).ToArray()]);
             intervalText!.Text="结果、图解及复制已清空；所选公差带仍保留。";
         }
         else
         {
             string[][] values=[[S(r.UpperUm/1000m),S(r.LowerUm/1000m),F(r.ToleranceUm/1000m),F(r.MinimumMm),F(r.MaximumMm)],[S(r.UpperUm),S(r.LowerUm),F(r.ToleranceUm),"",""]];
-            for(int row=0;row<2;row++)for(int col=0;col<5;col++)fitValues[row,col].Text=values[row][col];
+            PresentColumns(values);
             intervalText!.Text=$"命中尺寸区间：{r.Interval}";
         }
-        AlignResultColumns();
         int grade=singleKind==FeatureKind.Hole?Input.HoleGrade:Input.ShaftGrade;
-        advice.Text=$"IT{grade}：{SizeToleranceCatalog.GradeAdvice(grade)}";advice.ToolTip=advice.Text;
+        advice.Text=HasResult?$"IT{grade}：{SizeToleranceCatalog.GradeAdvice(grade)}":Error;advice.ToolTip=advice.Text;
+        RefreshResultHeading();
         UpdateMode();
     }
 }

@@ -14,12 +14,18 @@ internal static class Appearance
             ? ["#E8EDF4","#BAC5D1","#A1ADBB","#93B8FF","#3E4855","#242A32","#191D23","#2C343F","#263C59","#E1E7F0","#1C2530","#252D37","#233F32","#443D27","#20262E","#E0E7EF","#83909E","#4A5665","#FFAAA1","#245DDB","#9D5B17"]
             : ["#20252B","#505C68","#626F7C","#245DDB","#D8DEE5","#FFFFFF","#F5F6F8","#F0F2F5","#E9F0FF","#245DDB","#FFFFFF","#FFFFFF","#E5F3E5","#FFF2C7","#E6EAEE","#24303B","#66727E","#D2D9E2","#A7332C","#245DDB","#9D5B17"];
         for(int i=0;i<keys.Length;i++)Application.Current.Resources[keys[i]]=new SolidColorBrush((Color)ColorConverter.ConvertFromString(values[i]));
+        Application.Current.Resources["FeatureHoleInk"]=new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark?"#93B8FF":"#245DDB"));
+        Application.Current.Resources["FeatureShaftInk"]=new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark?"#F0BC84":"#9D5B17"));
+        Application.Current.Resources["FocusRing"]=new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark?"#D5E5FF":"#172C4F"));
     }
     internal static void MatrixState(Button button,TextBlock check,SelectionRank rank,bool selected)
     {
         button.SetResourceReference(Control.BackgroundProperty,!button.IsEnabled?"MatrixDisabled":rank==SelectionRank.Preferred?"MatrixPreferred":rank==SelectionRank.Secondary?"MatrixSecondary":"MatrixSurface");
         button.SetResourceReference(Control.ForegroundProperty,button.IsEnabled?"MatrixInk":"MatrixDisabledInk");
         button.SetResourceReference(Control.BorderBrushProperty,selected?"Accent":"MatrixBorder");
+        SelectionVisual.SetIsSelected(button,selected);
+        string status=(selected?"已选中 · ":"")+(rank==SelectionRank.Preferred?"优先":rank==SelectionRank.Secondary?"其次":button.Tag is FitPreset?"常用":"最后")+(button.IsEnabled?"":" · 当前尺寸不可用");
+        System.Windows.Automation.AutomationProperties.SetItemStatus(button,status);
         button.BorderThickness=new Thickness(1);
         check.SetResourceReference(TextBlock.ForegroundProperty,"Accent");check.Visibility=selected?Visibility.Visible:Visibility.Hidden;
     }

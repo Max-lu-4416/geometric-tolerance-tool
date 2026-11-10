@@ -9,11 +9,14 @@ public partial class MainWindow : Window
     public QueryViewModel ViewModel { get; } = new();
     private readonly ClipboardService clipboard;
     private readonly bool ownsClipboard;
+    private readonly ClickCopy mmCopy,umCopy;
+    private readonly Action<string>? feedback;
     public MainWindow() : this(new ClipboardService(), true) { }
-    internal MainWindow(ClipboardService clipboard, bool ownsClipboard = false)
+    internal MainWindow(ClipboardService clipboard, bool ownsClipboard = false,Action<string>? feedback=null)
     {
         this.clipboard = clipboard;
         this.ownsClipboard = ownsClipboard;
+        this.feedback=feedback;
         InitializeComponent();
         // Fit this application's window to the available desktop; the fixed
         // content scales down instead of introducing scroll bars.
@@ -23,7 +26,15 @@ public partial class MainWindow : Window
         Width = Math.Min(Width, area.Width);
         Height = Math.Min(Height, area.Height);
         DataContext = ViewModel;
-        ViewModel.QueryChanged += (_, _) => { clipboard.Cancel(); CopyStatus.Text = "数值不含单位，可直接粘贴到绘图软件"; };
+        mmCopy=new(ResultNumber,v=>clipboard.Copy(v.Text,ReportCopy,v.SuccessMessage),CopyMm);
+        umCopy=new(ResultUmNumber,v=>clipboard.Copy(v.Text,ReportCopy,v.SuccessMessage),CopyUm);
+        void UpdateTargets()
+        {
+            mmCopy.Update(new(ViewModel.Millimeters,"公差值","mm",ViewModel.HasResult));
+            umCopy.Update(new(ViewModel.MicrometerValue,"公差值","μm",ViewModel.HasResult));
+        }
+        ViewModel.PropertyChanged+=(_,_)=>UpdateTargets();UpdateTargets();
+        ViewModel.QueryChanged += (_, _) => { clipboard.Cancel(); ReportCopy(""); };
         Closed += (_, _) => { clipboard.Cancel(); if (ownsClipboard) clipboard.Dispose(); };
     }
     private void TypeChoice_Checked(object sender, RoutedEventArgs e)
@@ -35,13 +46,12 @@ public partial class MainWindow : Window
         if (sender is RadioButton { Tag: string code, IsEnabled: true }) ViewModel.SelectedGradeCode = code;
     }
     private void GradeChoice_Click(object sender, RoutedEventArgs e) => ViewModel.ShowGradeAdvice();
-    private void CopyMm_Click(object sender, RoutedEventArgs e) => Copy("mm");
-    private void CopyUm_Click(object sender, RoutedEventArgs e) => Copy("μm");
     private void CopyFull_Click(object sender, RoutedEventArgs e) => Copy("full");
     internal void Copy(string mode)
     {
         if (!ViewModel.HasResult) return;
         var text = mode switch { "mm" => ViewModel.Millimeters, "μm" => ViewModel.MicrometerValue, _ => ViewModel.FullResult };
-        clipboard.Copy(text, message => CopyStatus.Text = message);
+        clipboard.Copy(text, ReportCopy,"已复制完整结果。");
     }
+    private void ReportCopy(string message){if(feedback is null)CopyStatus.Text=message;else feedback(message);}
 }

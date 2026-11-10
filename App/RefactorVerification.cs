@@ -19,9 +19,10 @@ internal static class RefactorVerification
             {
                 window.Settings.CopyUnit=fixture.Unit;window.Settings.DecimalPlaces=fixture.Decimals;window.ApplySettings();
                 var page=window.SizePages[fixture.PageId];page.Restore(fixture.Input);
-                if(!page.HasResult||page.FullText!=fixture.Expected)
+                var expected=fixture.Expected.Replace($"偏差复制单位：{fixture.Unit}；尺寸始终为 mm。",CopyText.WithTitle);
+                if(!page.HasResult||page.FullText!=expected)
                     File.WriteAllText(Path.Combine(directory,"copy-mismatch.txt"),$"EXPECTED:\n{fixture.Expected}\nACTUAL:\n{page.FullText}\nERROR: {page.Error}");
-                check(page.HasResult&&page.FullText==fixture.Expected,$"Copy compatibility {fixture.PageId}/{fixture.Decimals}/{fixture.Unit}/{fixture.Input.HoleZone}/{fixture.Input.ShaftZone}");
+                check(page.HasResult&&page.FullText==expected,$"Copy compatibility {fixture.PageId}/{fixture.Decimals}/{fixture.Unit}/{fixture.Input.HoleZone}/{fixture.Input.ShaftZone}");
                 page.Input.Nominal="invalid";page.Refresh();
                 check(page.FullText=="","Invalid query has no copy text");
             }
@@ -45,6 +46,8 @@ internal static class RefactorVerification
         check(copied=="new"&&!clipboard.HasPending,"New copy replaces pending copy");
         busy=true;clipboard.Copy("cancel",_=>throw new InvalidOperationException("Cancelled completion"));clipboard.Cancel();
         calls=0;busy=false;clipboard.RetryPending();check(calls==0&&!scheduled,"Cancel drops payload and callback");
+        busy=true;status=null;clipboard.Copy("+0.039",message=>status=message,"已复制孔上偏差：+0.039 mm");
+        busy=false;clipboard.RetryPending();check(copied=="+0.039"&&status=="已复制孔上偏差：+0.039 mm","Context message survives clipboard retry");
 
         var testPath=Path.Combine(directory,"clipboard-test.json");
         var shell=new ShellWindow(testPath,clipboard);

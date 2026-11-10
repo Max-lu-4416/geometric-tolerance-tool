@@ -70,6 +70,9 @@ public sealed class QueryViewModel : INotifyPropertyChanged
     public GradeChoice[] GradeChoices => gradeChoices;
     public GradeChoice[] GeneralGradeChoices { get; } = [new("H", true), new("K", true), new("L", true)];
     public GradeChoice[] AllGradeChoices { get; private set; } = [];
+    public string NumericGradeHint => $"标注公差 · {Catalog.TableFor(selectedType).FirstGrade}～{Catalog.TableFor(selectedType).LastGrade} 级";
+    public string ResultCategory => HasResult ? IsGeneral ? "未注公差" : "标注公差" : "等待有效条件";
+    public string ResultContext => HasResult && Interval.Length>0 ? $"{ResultDescription} · {Interval}" : ResultDescription;
     public string GradeHint => IsGeneral ? "当前为未注公差 · 点击等级查看选用说明" : "0～12：标注公差 · H/K/L：未注公差";
     public string ParameterLabel => !IsGeneral ? selectedType.ParameterLabel : selectedType.Id == "flatness" ? "L / D" : "L";
     public string ParameterHint => !IsGeneral ? selectedType.Hint : selectedType.Id switch

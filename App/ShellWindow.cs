@@ -7,7 +7,7 @@ using Microsoft.Win32;
 using Tolerance.Core;
 namespace Tolerance.App;
 
-internal sealed class ShellWindow : Window
+internal sealed partial class ShellWindow : Window
 {
     internal ToolSettings Settings { get; private set; }
     internal SettingsStore Store { get; }
@@ -18,6 +18,7 @@ internal sealed class ShellWindow : Window
     internal readonly ContentControl Host=new();
     private readonly UIElement geometryContent;
     private readonly TextBlock status=UI.Text("",12);
+    private readonly FeedbackStatus feedback=new();
     private readonly Dictionary<string,Button> nav=[];
     private readonly Dictionary<DependencyObject,double> originalFonts=[];
     private readonly ClipboardService clipboard;
@@ -27,8 +28,10 @@ internal sealed class ShellWindow : Window
     internal ShellWindow(string? configPath=null, ClipboardService? clipboard=null)
     {
         this.clipboard=clipboard??new ClipboardService();
-        Geometry=new(this.clipboard);
+        PreviewKeyDown+=(_,e)=>{if(e.Key==System.Windows.Input.Key.Escape&&ContextHelp.Close())e.Handled=true;};
+        Geometry=new(this.clipboard,feedback:ReportFeedback);
         Store=new(configPath??SettingsStore.DefaultPath);Settings=Store.Load();
+        feedback.Loaded(Store.Status);
         Title="公差查询工具";Width=1240;Height=870;MinWidth=1000;MinHeight=700;WindowStartupLocation=WindowStartupLocation.CenterScreen;
         FontFamily=new FontFamily("Microsoft YaHei UI");FontSize=14;UseLayoutRounding=true;
         var area=SystemParameters.WorkArea;MinWidth=Math.Min(MinWidth,area.Width);MinHeight=Math.Min(MinHeight,area.Height);Width=Math.Min(Width,area.Width);Height=Math.Min(Height,area.Height);
@@ -37,11 +40,18 @@ internal sealed class ShellWindow : Window
         var outer=new Grid{Margin=new Thickness(16)};Content=outer;
         var viewbox=new Viewbox{Stretch=Stretch.Uniform,StretchDirection=StretchDirection.DownOnly,Child=Design};outer.Children.Add(viewbox);
         Design.RowDefinitions.Add(new(){Height=new GridLength(48)});Design.RowDefinitions.Add(new(){Height=new GridLength(700)});Design.RowDefinitions.Add(new(){Height=new GridLength(22)});
-        var navigation=new Grid();Design.Children.Add(navigation);
+        var navigation=new Grid{Name="NavigationBar"};Design.Children.Add(navigation);
+        foreach(var width in new[]{new GridLength(104),new GridLength(104),new GridLength(16),new GridLength(132),new GridLength(132),new GridLength(16),new GridLength(120),new GridLength(1,GridUnitType.Star),new GridLength(88)})navigation.ColumnDefinitions.Add(new(){Width=width});
+        foreach(int column in new[]{2,5})
+        {
+            var divider=new Border{Width=1,Height=16,VerticalAlignment=VerticalAlignment.Center,Margin=new Thickness(0,0,0,8)};
+            divider.SetResourceReference(Border.BackgroundProperty,"Hairline");Grid.SetColumn(divider,column);navigation.Children.Add(divider);
+        }
+        int[] columns=[0,1,3,4,6,8];
         foreach(string id in new[]{"shaft","hole","shaft-fit","hole-fit","geometry","settings"})
         {
-            navigation.ColumnDefinitions.Add(new());var b=new Button{Content=PageTitle(id),Style=(Style)FindResource("NavigationButton"),Margin=new Thickness(0,0,12,8),Padding=new Thickness(12,4,12,4)};
-            Grid.SetColumn(b,nav.Count);navigation.Children.Add(b);nav.Add(id,b);b.Click+=(_,_)=>Navigate(id);
+            var b=new Button{Content=PageTitle(id),Style=(Style)FindResource("NavigationButton"),Margin=new Thickness(0,0,4,8)};
+            Grid.SetColumn(b,columns[nav.Count]);navigation.Children.Add(b);nav.Add(id,b);b.Click+=(_,_)=>Navigate(id);
         }
         Grid.SetRow(Host,1);Design.Children.Add(Host);Grid.SetRow(status,2);Design.Children.Add(status);
         var catalog=new SizeToleranceCatalog();
@@ -54,17 +64,26 @@ internal sealed class ShellWindow : Window
         }
         RestoreGeometry();Geometry.ViewModel.QueryChanged+=(_,_)=>SaveInputs();
         systemTimer.Tick+=(_,_)=>{if(Settings.Theme=="system")ApplyTheme();};systemTimer.Start();
-        Closed+=(_,_)=>{SaveInputs();this.clipboard.Dispose();systemTimer.Stop();Geometry.Close();};
+        Closed+=(_,_)=>{ContextHelp.Close();SaveInputs();this.clipboard.Dispose();systemTimer.Stop();Geometry.Close();};
         ApplySettings();Navigate(Settings.StartupPage=="last"?Settings.LastPage:Settings.StartupPage);
     }
     internal static string PageTitle(string id)=>id switch{"shaft"=>"轴偏差","hole"=>"孔偏差","shaft-fit"=>"基轴制配合","hole-fit"=>"基孔制配合","settings"=>"设置",_=>"形位公差"};
     internal void Navigate(string id)
     {
-        if(id!=ActivePage)clipboard.Cancel();
+        if(id!=ActivePage){clipboard.Cancel();ReportFeedback("");Geometry.CopyStatus.Text="";ContextHelp.Close();}
         ActivePage=id;Host.Content=id=="geometry"?geometryContent:id=="settings"?BuildSettings():SizePages.GetValueOrDefault(id);
-        if(id!="settings"){Settings.LastPage=id;Store.Save(Settings);}
-        foreach(var (key,b) in nav){b.BorderBrush=key==id?UI.Brush("Accent"):Brushes.Transparent;b.Foreground=UI.Brush(key==id?"Accent":"Secondary");}
-        UpdateLayout();ApplyFonts(Design);status.Text=Store.Status;
+        if(id!="settings"){Settings.LastPage=id;SaveSettings();}
+        UpdateNavigation();
+        UpdateLayout();ApplyFonts(Design);RefreshStatus();
+    }
+    private void UpdateNavigation()
+    {
+        foreach(var(key,button) in nav)
+        {
+            bool active=key==ActivePage;
+            button.BorderBrush=active?UI.Brush("Accent"):Brushes.Transparent;button.Foreground=UI.Brush(active?"Accent":"Secondary");
+            button.Background=active?UI.Brush("SelectionSurface"):Brushes.Transparent;button.FontWeight=active?FontWeights.Medium:FontWeights.Normal;
+        }
     }
     private void RestoreGeometry()
     {
@@ -81,22 +100,15 @@ internal sealed class ShellWindow : Window
             var vm=Geometry.ViewModel;Settings.Inputs["geometry"]=new(){TypeId=vm.SelectedType.Id,GradeCode=vm.SelectedGradeCode,Parameter=vm.ParameterText,SizeTolerance=vm.SizeToleranceText};
         }
         else Settings.Inputs.Clear();
-        Store.Save(Settings);status.Text=Store.Status;
+        SaveSettings();
     }
     internal void ApplySettings()
     {
         var format=(Settings.CopyUnit,Settings.DecimalPlaces);
-        if(copyFormat!=format)clipboard.Cancel();
+        if(copyFormat!=format){clipboard.Cancel();ReportFeedback("");}
         copyFormat=format;
         NumberDisplay.MinimumDecimals=Settings.DecimalPlaces;Topmost=Settings.Topmost;ApplyTheme();
         foreach(var p in SizePages.Values)p.Refresh();Geometry.ViewModel.RefreshFormatting();
-        foreach(var (name,unit) in new[]{("CopyMm","mm"),("CopyUm","μm")})
-        {
-            var button=(Button)Geometry.FindName(name);
-            button.SetResourceReference(BackgroundProperty,Settings.CopyUnit==unit?"PrimarySurface":"ControlSurface");
-            button.SetResourceReference(ForegroundProperty,Settings.CopyUnit==unit?"PrimaryInk":"Ink");
-            button.SetResourceReference(BorderBrushProperty,Settings.CopyUnit==unit?"PrimarySurface":"Hairline");
-        }
         ApplyFonts(Design);SaveInputs();
     }
     private void ApplyTheme()
@@ -108,7 +120,7 @@ internal sealed class ShellWindow : Window
         }
         Appearance.Apply(dark);
         foreach(var p in SizePages.Values)p.Refresh();
-        foreach(var(key,b) in nav){b.BorderBrush=key==ActivePage?UI.Brush("Accent"):Brushes.Transparent;b.Foreground=UI.Brush(key==ActivePage?"Accent":"Secondary");}
+        UpdateNavigation();
     }
     internal void ApplyFonts(DependencyObject root)
     {
@@ -131,15 +143,18 @@ internal sealed class ShellWindow : Window
         Collect(root);
         foreach(var (node,property) in targets)node.SetValue(property,originalFonts[node]*(Settings.LargeFont?1.12:1));
     }
-    internal void Copy(string text) => clipboard.Copy(text,message=>status.Text=message);
-    internal void CancelCopy(string pageId) { if(ActivePage==pageId)clipboard.Cancel(); }
+    private void RefreshStatus()=>status.Text=feedback.Text;
+    internal void ReportFeedback(string message){feedback.Report(message);RefreshStatus();}
+    private void SaveSettings(){bool saved=Store.Save(Settings);feedback.Saved(saved,Store.Status);RefreshStatus();}
+    internal void Copy(string text,string? successMessage=null) => clipboard.Copy(text,ReportFeedback,successMessage);
+    internal string CopyStatus=>status.Text;
+    internal void CancelCopy(string pageId) { if(ActivePage==pageId){clipboard.Cancel();ReportFeedback("");} }
     private UIElement BuildSettings()
     {
         var card=UI.Card();var root=new StackPanel();card.Child=root;
-        root.Children.Add(UI.Text("设置",24,FontWeights.Medium));root.Children.Add(UI.Text("偏好自动保存到当前 Windows 用户",14,margin:new Thickness(0,4,0,20)));
         var grid=new Grid();grid.ColumnDefinitions.Add(new());grid.ColumnDefinitions.Add(new(){Width=new GridLength(40)});grid.ColumnDefinitions.Add(new());root.Children.Add(grid);
         var left=new StackPanel();var right=new StackPanel();grid.Children.Add(left);Grid.SetColumn(right,2);grid.Children.Add(right);
-        void Select(Panel panel,string label,string[] labels,string[] values,string current,Action<string> set)
+        void Select(Panel panel,string label,string[] labels,string[] values,string current,Action<string> set,string? help=null)
         {
             panel.Children.Add(UI.Text(label,14,FontWeights.Medium,new Thickness(0,0,0,8)));
             var wrap=new WrapPanel{Margin=new Thickness(0,0,0,24)};panel.Children.Add(wrap);
@@ -147,20 +162,22 @@ internal sealed class ShellWindow : Window
             {
                 string value=values[i];var b=new Button{Content=labels[i],Padding=new Thickness(12,8,12,8),Margin=new Thickness(0,0,8,8)};
                 b.BorderBrush=UI.Brush(value==current?"Accent":"Hairline");b.BorderThickness=new Thickness(1);b.SetResourceReference(BackgroundProperty,value==current?"SelectionSurface":"ControlSurface");
+                System.Windows.Automation.AutomationProperties.SetName(b,label+"："+labels[i]);
+                System.Windows.Automation.AutomationProperties.SetItemStatus(b,value==current?"已选中":"未选中");
+                if(help is not null)ContextHelp.Attach(b,help);
                 b.Click+=(_,_)=>{set(value);ApplySettings();Host.Content=BuildSettings();UpdateLayout();ApplyFonts(Design);};wrap.Children.Add(b);
             }
         }
         Select(left,"启动页面",["上次查询页","轴偏差","孔偏差","基轴制","基孔制","形位公差"],["last","shaft","hole","shaft-fit","hole-fit","geometry"],Settings.StartupPage,v=>Settings.StartupPage=v);
         Select(left,"记住各页面输入",["开启","关闭并清除记录"],["on","off"],Settings.RememberInputs?"on":"off",v=>{Settings.RememberInputs=v=="on";if(!Settings.RememberInputs)Settings.Inputs.Clear();});
         Select(left,"窗口置顶",["关闭","开启"],["off","on"],Settings.Topmost?"on":"off",v=>Settings.Topmost=v=="on");
-        Select(left,"默认复制单位",["mm","μm"],["mm","μm"],Settings.CopyUnit,v=>Settings.CopyUnit=v);
-        Select(right,"小数显示（至少保留，不截断）",["自动","3 位","4 位","6 位"],["0","3","4","6"],Settings.DecimalPlaces.ToString(),v=>Settings.DecimalPlaces=int.Parse(v));
-        Select(right,"主题",["浅色","深色","跟随系统"],["light","dark","system"],Settings.Theme,v=>Settings.Theme=v);
+        left.Children.Add(BuildAbout());
+        Select(right,"小数显示（至少保留，不截断）",["自动","3 位","4 位","6 位"],["0","3","4","6"],Settings.DecimalPlaces.ToString(),v=>Settings.DecimalPlaces=int.Parse(v),"只补零，不截断有效精度。输入公称尺寸和极限尺寸的单位始终为 mm；点击数值按显示内容复制，不附带单位。");
+        Select(right,"主题",["浅色","深色","跟随系统"],["light","dark","system"],Settings.Theme,v=>Settings.Theme=v,"主题仅影响本工具；图例与公差带保留白底绘图区。");
         Select(right,"字号",["标准","大号"],["standard","large"],Settings.LargeFont?"large":"standard",v=>Settings.LargeFont=v=="large");
         var reset=new Button{Content="恢复默认设置及输入",HorizontalAlignment=HorizontalAlignment.Left,Margin=new Thickness(0,8,0,12)};right.Children.Add(reset);
         reset.Click+=(_,_)=>Reset();
-        right.Children.Add(UI.Text("图例与公差带保留白底绘图区。\r\n输入公称尺寸和复制极限尺寸的单位始终为 mm。",13));
-        root.Children.Add(UI.Text(Store.Status,13,margin:new Thickness(0,16,0,0)));return card;
+        return card;
     }
     internal void Reset()
     {

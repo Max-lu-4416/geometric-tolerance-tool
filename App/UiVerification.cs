@@ -22,7 +22,7 @@ internal static class UiVerification
         var vm = window.ViewModel;
         var surface = (Grid)window.FindName("DesignSurface");
         var typePanel = (ItemsControl)window.FindName("TypeGroups");
-        var gradePanel = (ItemsControl)window.FindName("GradeChoices");
+        var gradePanel = (FrameworkElement)window.FindName("GradeSection");
         var parameter = (TextBox)window.FindName("ParameterBox");
         var dimension = (TextBox)window.FindName("SizeToleranceBox");
         var image = (Image)window.FindName("ParameterDiagram");
@@ -43,8 +43,8 @@ internal static class UiVerification
             }
             var error = (TextBlock)window.FindName("ErrorText");
             var rule = (TextBlock)window.FindName("RuleText");
-            Check(!error.IsVisible || Bounds(error).Bottom <= Bounds(copyMm).Top, "Error and copy actions do not overlap");
-            Check(Bounds(rule).Bottom <= Bounds(copyMm).Top, "Rule and copy actions do not overlap");
+            Check(!error.IsVisible || Bounds(error).Bottom <= Bounds(copyFull).Top, "Error and copy actions do not overlap");
+            Check(!rule.IsVisible || Bounds(rule).Bottom <= Bounds(copyFull).Top, "Rule and copy actions do not overlap");
         }
         void SelectType(string id)
         {
@@ -126,7 +126,9 @@ internal static class UiVerification
         try
         {
             copyMm.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Check(PumpUntil(() => Clipboard.GetText() == "0.01"), "Numeric mm copy");
+            Check(PumpUntil(()=>window.CopyStatus.Text=="已复制公差值：0.01 mm"),"Geometry copy includes field and unit feedback");
             copyUm.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Check(PumpUntil(() => Clipboard.GetText() == "10"), "Numeric um copy");
+            Check(PumpUntil(()=>window.CopyStatus.Text=="已复制公差值：10 μm"),"Geometry um feedback");
             SelectGrade("K"); parameter.Text = "100"; Flush();
             copyFull.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Check(PumpUntil(() => Clipboard.GetText().Contains("未注公差等级：K") && Clipboard.GetText().Contains("0.2 mm = 200 μm") && !Clipboard.GetText().Contains("手册")), "General full copy");

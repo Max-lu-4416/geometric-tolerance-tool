@@ -19,6 +19,29 @@ internal sealed partial class SizePage : Grid
     internal readonly BandPlot Plot=new();
     private readonly List<(Button Button,FeatureKind Kind,string? Zone,int Grade)> choices=[];
     private readonly List<Button> copyButtons=[];
+    private readonly Dictionary<TextBlock,ClickCopy> copyTargets=[];
+    private ClickCopy? titleCopy;
+    internal IEnumerable<ClickCopy> NumericCopies=>copyTargets.Values;
+    internal ClickCopy TitleCopy=>titleCopy!;
+    private ClickCopy Target(TextBlock text)
+    {
+        if(!copyTargets.TryGetValue(text,out var target)){target=new(text,v=>shell.Copy(v.Text,v.SuccessMessage));copyTargets.Add(text,target);}
+        return target;
+    }
+    private void PresentColumns(string[][] values)
+    {
+        string[] fields=["上偏差","下偏差","公差","最小尺寸","最大尺寸"];
+        for(int col=0;col<5;col++)
+        {
+            var aligned=CopyValue.Align(new[]{values[0][col],values[1][col]});
+            for(int row=0;row<2;row++)
+            {
+                string unit=fit?(col==2?"μm":"mm"):row==0||col>=3?"mm":"μm";
+                string feature=fit?(row==0?"孔":"轴"):singleKind==FeatureKind.Hole?"孔":"轴";
+                Target(fitValues[row,col]).Update(new(aligned[row],feature+fields[col],unit,HasResult));
+            }
+        }
+    }
     internal DeviationResult? Hole { get; private set; }
     internal DeviationResult? Shaft { get; private set; }
     internal FitResult? Fit { get; private set; }
@@ -39,15 +62,10 @@ internal sealed partial class SizePage : Grid
         (nominal,heading,summary,notice,advice)=BuildQueryLayout();
         Refresh();
     }
-    private string CopyNumber(decimal um)=>F(shell.Settings.CopyUnit=="mm"?um/1000m:um);
-    private string DeviationCopy(bool upper)
-    {
-        var r=Hole??Shaft;return CopyNumber(upper?r!.UpperUm:r!.LowerUm);
-    }
     private void AddCopy(Panel parent,string label,Func<string> value)
     {
         var b=new Button{Content="复制"+label,Padding=new Thickness(10,7,10,7),Margin=new Thickness(0,0,6,6),FontSize=12};
-        b.Click+=(_,_)=>{if(HasResult)shell.Copy(value());};if(label=="尺寸标注")b.Style=(Style)FindResource("PrimaryButton");parent.Children.Add(b);copyButtons.Add(b);
+        b.Click+=(_,_)=>{if(HasResult)shell.Copy(value(),"已复制完整结果。");};if(label=="完整结果")b.Style=(Style)FindResource("PrimaryButton");parent.Children.Add(b);copyButtons.Add(b);
     }
     private void AddChoices(Panel parent,FeatureKind kind,bool fixedZone)
     {
@@ -96,14 +114,16 @@ internal sealed partial class SizePage : Grid
             if(fit){Fit=catalog.CalculateFit(basis,d,Input.HoleZone,Input.HoleGrade,Input.ShaftZone,Input.ShaftGrade);Hole=Fit.Hole;Shaft=Fit.Shaft;}
             else if(singleKind==FeatureKind.Hole)Hole=catalog.LookupDeviation(singleKind,d,Input.HoleZone,Input.HoleGrade);
             else Shaft=catalog.LookupDeviation(singleKind,d,Input.ShaftZone,Input.ShaftGrade);
-            resultText=SizeResultText.Create(Hole,Shaft,Fit,shell.Settings.CopyUnit);
+            resultText=SizeResultText.Create(Hole,Shaft,Fit);
             heading.Text=resultText.Heading;summary.Text=resultText.Summary;notice.Text=resultText.Notice;
         }
         catch(ArgumentException ex){Error=ex.Message;heading.Text="等待有效查询条件";summary.Text=Error;notice.Text="";}
+        titleCopy!.Update(new(resultText?.Heading??"等待有效查询条件","尺寸标注","",HasResult));
         if(!HasResult)shell.CancelCopy(PageId);
         foreach(var b in copyButtons)b.IsEnabled=HasResult;
         Plot.Hole=Hole;Plot.Shaft=Shaft;Plot.InvalidateVisual();
         if(fit)RefreshMatrix(d,valid);else RefreshDeviationMatrix(d,valid);
+        if(notice.Text==CopyText.WithTitle)notice.Text="";
     }
     internal void Restore(PageInput input){Input=input;nominal.Text=input.Nominal;Refresh();}
 }

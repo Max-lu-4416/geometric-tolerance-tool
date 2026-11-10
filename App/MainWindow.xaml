@@ -1,11 +1,28 @@
 <Window x:Class="Tolerance.App.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="几何公差查询工具" Width="1220" Height="780" MinWidth="1100" MinHeight="660" WindowStartupLocation="CenterScreen"
         FontFamily="Microsoft YaHei UI" FontSize="14" Foreground="{DynamicResource Ink}" Background="{DynamicResource CanvasBackground}" UseLayoutRounding="True">
+  <Window.Resources>
+    <Style x:Key="GeometryGradeRadio" TargetType="RadioButton" BasedOn="{StaticResource ChoiceRadio}">
+      <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="RadioButton">
+        <Border x:Name="Cell" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="4"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" /></Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Cell" Property="BorderBrush" Value="{DynamicResource Accent}" /></Trigger>
+          <Trigger Property="IsChecked" Value="True"><Setter TargetName="Cell" Property="Background" Value="{DynamicResource SelectionSurface}" /><Setter TargetName="Cell" Property="BorderBrush" Value="{DynamicResource Accent}" /><Setter Property="Foreground" Value="{DynamicResource Accent}" /></Trigger>
+          <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Cell" Property="BorderBrush" Value="{DynamicResource Accent}" /></Trigger>
+          <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.55" /><Setter Property="Cursor" Value="Arrow" /></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate></Setter.Value></Setter>
+    </Style>
+    <DataTemplate x:Key="GeometryGradeTemplate">
+      <RadioButton Style="{StaticResource GeometryGradeRadio}" GroupName="ToleranceGrade" Tag="{Binding Code}" Checked="GradeChoice_Checked" Click="GradeChoice_Click" IsEnabled="{Binding IsAvailable}" Height="28" Margin="0,0,4,4" Background="{DynamicResource ControlSurface}" BorderBrush="{DynamicResource Hairline}" AutomationProperties.Name="{Binding Code, StringFormat={}公差等级 {0}}">
+        <RadioButton.IsChecked><MultiBinding Converter="{StaticResource SelectionEquals}" Mode="OneWay"><Binding Path="DataContext.SelectedGradeCode" RelativeSource="{RelativeSource AncestorType=Window}" /><Binding Path="Code" /></MultiBinding></RadioButton.IsChecked>
+        <TextBlock Text="{Binding Code}" FontFamily="Consolas" FontSize="14" HorizontalAlignment="Center" />
+      </RadioButton>
+    </DataTemplate>
+  </Window.Resources>
   <Viewbox x:Name="LayoutHost" Stretch="Uniform" StretchDirection="DownOnly" Margin="0">
     <Grid x:Name="DesignSurface" Width="1180" Height="700" Background="{DynamicResource CanvasBackground}">
-      <Grid.RowDefinitions><RowDefinition Height="56" /><RowDefinition Height="*" /></Grid.RowDefinitions>
-      <StackPanel><TextBlock Text="几何公差查询" FontSize="24" FontWeight="Medium" /><TextBlock Text="选择类型与等级，输入参数；点击等级可查看选用说明" Foreground="{DynamicResource Secondary}" FontSize="12" Margin="0,4,0,0" /></StackPanel>
-      <Grid Grid.Row="1" Margin="0,8,0,0">
+      <Grid>
         <Grid.ColumnDefinitions><ColumnDefinition Width="300" /><ColumnDefinition Width="16" /><ColumnDefinition Width="410" /><ColumnDefinition Width="16" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
         <Border Background="{DynamicResource Surface}" CornerRadius="8" Padding="16" BorderBrush="{DynamicResource Hairline}" BorderThickness="1">
           <StackPanel>
@@ -33,39 +50,47 @@
             <TextBlock Text="位置度按数系选取，本版不提供等级查值" FontSize="12" Foreground="{DynamicResource Muted}" Margin="0,8,0,0" />
           </StackPanel>
         </Border>
-        <Border Grid.Column="2" Background="{DynamicResource Surface}" CornerRadius="8" Padding="16" BorderBrush="{DynamicResource Hairline}" BorderThickness="1">
+        <Border x:Name="QueryPanel" Grid.Column="2" Background="{DynamicResource Surface}" CornerRadius="8" Padding="16" BorderBrush="{DynamicResource Hairline}" BorderThickness="1">
           <Grid>
             <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
-            <StackPanel>
-              <Grid Margin="0,0,0,8"><TextBlock Text="公差等级" FontSize="16" FontWeight="Medium" /><TextBlock Text="{Binding SelectedGradeCode, StringFormat={}{0} 级}" Foreground="{DynamicResource Accent}" HorizontalAlignment="Right" /></Grid>
-              <ItemsControl x:Name="GradeChoices" ItemsSource="{Binding AllGradeChoices}">
-                <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate><DataTemplate>
-                  <RadioButton Style="{StaticResource ChoiceRadio}" GroupName="ToleranceGrade" Tag="{Binding Code}" Checked="GradeChoice_Checked" Click="GradeChoice_Click" IsEnabled="{Binding IsAvailable}" Height="36" Margin="0,0,4,4" Background="{DynamicResource CanvasBackground}" BorderBrush="{DynamicResource Hairline}" HorizontalContentAlignment="Center" AutomationProperties.Name="{Binding Code, StringFormat={}公差等级 {0}}">
-                    <RadioButton.IsChecked><MultiBinding Converter="{StaticResource SelectionEquals}" Mode="OneWay"><Binding Path="DataContext.SelectedGradeCode" RelativeSource="{RelativeSource AncestorType=Window}" /><Binding Path="Code" /></MultiBinding></RadioButton.IsChecked>
-                    <TextBlock Text="{Binding Code}" FontFamily="Segoe UI" FontSize="16" HorizontalAlignment="Center" Typography.NumeralAlignment="Tabular" />
-                  </RadioButton>
-                </DataTemplate></ItemsControl.ItemTemplate>
+            <StackPanel x:Name="GradeSection">
+              <Grid Margin="0,0,0,8"><TextBlock Text="公差等级" FontSize="16" FontWeight="Medium" /><TextBlock Text="{Binding SelectedGradeCode, StringFormat={}{0} 级}" Foreground="{DynamicResource Accent}" HorizontalAlignment="Right" FontSize="14" /></Grid>
+              <TextBlock Text="{Binding NumericGradeHint}" FontSize="12" Foreground="{DynamicResource Secondary}" Margin="0,0,0,4" />
+              <ItemsControl x:Name="GradeChoices" ItemsSource="{Binding GradeChoices}" ItemTemplate="{StaticResource GeometryGradeTemplate}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="7" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
               </ItemsControl>
-              <TextBlock Text="{Binding GradeHint}" Foreground="{DynamicResource Muted}" FontSize="12" Margin="0,4,0,0" />
+              <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="未注公差" FontSize="12" Foreground="{DynamicResource Secondary}" Width="88" VerticalAlignment="Center" Margin="0,0,0,4" />
+                <ItemsControl x:Name="GeneralGrades" ItemsSource="{Binding GeneralGradeChoices}" ItemTemplate="{StaticResource GeometryGradeTemplate}" Width="168">
+                  <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="3" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                </ItemsControl>
+              </StackPanel>
             </StackPanel>
             <StackPanel Grid.Row="1" Margin="0,12,0,0">
-              <Grid Margin="0,0,0,4"><TextBlock Text="主参数 / mm" FontSize="14" FontWeight="Medium" /><TextBlock Text="{Binding ParameterLabel}" Foreground="{DynamicResource Secondary}" HorizontalAlignment="Right" /></Grid>
-              <TextBox x:Name="ParameterBox" AutomationProperties.AutomationId="ParameterBox" AutomationProperties.Name="主参数 mm" IsEnabled="{Binding LengthRequired}" Text="{Binding ParameterText, UpdateSourceTrigger=PropertyChanged}" Height="36" MinHeight="36" Padding="8,4" />
+              <Grid Margin="0,0,0,4"><TextBlock Text="主参数" FontSize="14" FontWeight="Medium" /><TextBlock Text="{Binding ParameterLabel}" FontSize="12" Foreground="{DynamicResource Secondary}" HorizontalAlignment="Right" /></Grid>
+              <Border x:Name="ParameterFrame" BorderThickness="1" CornerRadius="4"><Border.Style><Style TargetType="Border"><Setter Property="BorderBrush" Value="{DynamicResource Hairline}" /><Style.Triggers><Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter Property="BorderBrush" Value="{DynamicResource Accent}" /></Trigger></Style.Triggers></Style></Border.Style><Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="40" /></Grid.ColumnDefinitions>
+                <TextBox x:Name="ParameterBox" AutomationProperties.AutomationId="ParameterBox" AutomationProperties.Name="主参数 mm" IsEnabled="{Binding LengthRequired}" Text="{Binding ParameterText, UpdateSourceTrigger=PropertyChanged}" Height="36" MinHeight="36" Padding="8,4" BorderThickness="0" Background="Transparent" />
+                <TextBlock Grid.Column="1" Text="mm" FontSize="12" Foreground="{DynamicResource Secondary}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+              </Grid></Border>
               <TextBlock Text="{Binding AllowedRange}" Foreground="{DynamicResource Muted}" FontSize="12" Margin="0,4,0,0" />
               <TextBlock Text="{Binding ParameterHint}" Foreground="{DynamicResource Secondary}" FontSize="12" LineHeight="18" Margin="0,4,0,0" />
               <StackPanel x:Name="SizeTolerancePanel" Visibility="{Binding SizeToleranceRequired, Converter={StaticResource BoolVisibility}}" Margin="0,8,0,0">
                 <TextBlock Text="{Binding SizeToleranceLabel}" FontSize="12" Margin="0,0,0,4" /><TextBox x:Name="SizeToleranceBox" AutomationProperties.Name="尺寸公差 mm" ToolTip="输入上极限尺寸与下极限尺寸之差，例如 ±0.1 mm 应填 0.2" Text="{Binding SizeToleranceText, UpdateSourceTrigger=PropertyChanged}" Height="36" MinHeight="36" Padding="8,4" />
               </StackPanel>
             </StackPanel>
-            <Grid Grid.Row="2" Margin="0,12,0,0">
-              <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
-              <Border BorderBrush="{DynamicResource Hairline}" BorderThickness="0,1,0,0" Padding="0,12,0,0"><Grid><TextBlock Text="公差值" FontSize="16" FontWeight="Medium" /><TextBlock Text="{Binding ResultState}" Foreground="{DynamicResource Muted}" FontSize="12" HorizontalAlignment="Right" /></Grid></Border>
-              <StackPanel Grid.Row="1" Margin="0,4,0,0"><Viewbox Stretch="Uniform" StretchDirection="DownOnly" Height="52" HorizontalAlignment="Left"><StackPanel Orientation="Horizontal"><TextBlock x:Name="ResultNumber" Text="{Binding Millimeters}" FontFamily="Segoe UI" FontSize="36" Foreground="{DynamicResource Accent}" Typography.NumeralAlignment="Tabular" /><TextBlock Text="mm" FontSize="16" Foreground="{DynamicResource Secondary}" VerticalAlignment="Bottom" Margin="8,0,0,8" /></StackPanel></Viewbox><TextBlock Text="{Binding Micrometers}" FontSize="15" Foreground="{DynamicResource Secondary}" /></StackPanel>
-              <StackPanel Grid.Row="2" Margin="0,4,0,0"><TextBlock Text="{Binding ResultDescription}" FontSize="12" /><TextBlock Text="{Binding Interval}" Foreground="{DynamicResource Secondary}" FontSize="12" Margin="0,4,0,0" /><TextBlock x:Name="RuleText" Text="{Binding RuleText}" FontSize="12" Foreground="{DynamicResource Secondary}" LineHeight="17" Margin="0,4,0,0" /></StackPanel>
-              <TextBlock Grid.Row="3" x:Name="ErrorText" Text="{Binding Error}" Foreground="{DynamicResource Error}" FontSize="12" LineHeight="17" Margin="0,4,0,0"><TextBlock.Style><Style TargetType="TextBlock"><Style.Triggers><DataTrigger Binding="{Binding Error}" Value=""><Setter Property="Visibility" Value="Collapsed" /></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
-              <UniformGrid Grid.Row="5" Columns="3" Margin="0,8,0,0"><Button x:Name="CopyMm" Content="复制 mm" Click="CopyMm_Click" IsEnabled="{Binding HasResult}" Background="{DynamicResource PrimarySurface}" BorderBrush="{DynamicResource PrimarySurface}" Foreground="{DynamicResource PrimaryInk}" Padding="4,10" Margin="0,0,4,0" /><Button x:Name="CopyUm" Content="复制 μm" Click="CopyUm_Click" IsEnabled="{Binding HasResult}" Padding="4,10" Margin="0,0,4,0" /><Button x:Name="CopyFull" Content="复制完整结果" Click="CopyFull_Click" IsEnabled="{Binding HasResult}" Padding="4,10" /></UniformGrid>
-              <TextBlock Grid.Row="6" x:Name="CopyStatus" Text="数值复制不含单位" Foreground="{DynamicResource Muted}" FontSize="12" Margin="0,4,0,0" />
+            <Grid x:Name="ResultSection" Grid.Row="2" Margin="0,12,0,0" VerticalAlignment="Top">
+              <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="8" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+              <Border BorderBrush="{DynamicResource Hairline}" BorderThickness="0,1,0,0" Padding="0,12,0,0"><Grid><TextBlock Text="公差值" FontSize="14" FontWeight="Medium" /><TextBlock Text="{Binding ResultCategory}" Foreground="{DynamicResource Muted}" FontSize="12" HorizontalAlignment="Right" /></Grid></Border>
+              <Grid Grid.Row="1" Margin="0,4,0,0" Height="48">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="2*" /><ColumnDefinition /></Grid.ColumnDefinitions>
+                <Viewbox Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Left"><StackPanel Orientation="Horizontal"><Button x:Name="CopyMm"><TextBlock x:Name="ResultNumber" Text="{Binding Millimeters}" FontFamily="Consolas" FontSize="36" Foreground="{DynamicResource Accent}" /></Button><TextBlock Text="mm" FontSize="16" Foreground="{DynamicResource Secondary}" VerticalAlignment="Bottom" Margin="8,0,0,6" /></StackPanel></Viewbox>
+                <Viewbox Grid.Column="1" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Right"><StackPanel Orientation="Horizontal"><TextBlock Text="= " FontSize="15" Foreground="{DynamicResource Secondary}" /><Button x:Name="CopyUm"><TextBlock x:Name="ResultUmNumber" Text="{Binding MicrometerValue}" FontFamily="Consolas" FontSize="15" Foreground="{DynamicResource Secondary}" /></Button><TextBlock Text=" μm" FontSize="15" Foreground="{DynamicResource Secondary}" /></StackPanel></Viewbox>
+              </Grid>
+              <StackPanel Grid.Row="2" Margin="0,4,0,0"><TextBlock Text="{Binding ResultContext}" FontSize="12" Foreground="{DynamicResource Secondary}" /><TextBlock x:Name="RuleText" Text="{Binding RuleText}" FontSize="12" Foreground="{DynamicResource Secondary}" LineHeight="18" Margin="0,4,0,0"><TextBlock.Style><Style TargetType="TextBlock"><Style.Triggers><Trigger Property="Text" Value=""><Setter Property="Visibility" Value="Collapsed" /></Trigger></Style.Triggers></Style></TextBlock.Style></TextBlock></StackPanel>
+              <TextBlock Grid.Row="3" x:Name="ErrorText" Text="{Binding Error}" Foreground="{DynamicResource Error}" FontSize="12" LineHeight="18" Margin="0,4,0,0"><TextBlock.Style><Style TargetType="TextBlock"><Style.Triggers><DataTrigger Binding="{Binding Error}" Value=""><Setter Property="Visibility" Value="Collapsed" /></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+              <Button Grid.Row="5" x:Name="CopyFull" Content="复制完整结果" Click="CopyFull_Click" IsEnabled="{Binding HasResult}" Style="{DynamicResource PrimaryButton}" HorizontalAlignment="Left" Height="32" Padding="12,6" />
+              <StackPanel Grid.Row="6" Margin="0,4,0,0"><TextBlock Text="点击数值复制，不含单位" Foreground="{DynamicResource Muted}" FontSize="12" /><TextBlock x:Name="CopyStatus" Text="" Foreground="{DynamicResource Secondary}" FontSize="12" /></StackPanel>
             </Grid>
           </Grid>
         </Border>
