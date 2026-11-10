@@ -7,16 +7,23 @@ namespace Tolerance.App;
 internal static class Appearance
 {
     internal const double Caption=12;
-    internal static void Apply(bool dark)
+    private static ResourceDictionary? paletteOwner;
+    private static bool? appliedDark;
+    internal static bool Apply(bool dark)
     {
+        var resources=Application.Current.Resources;
+        if(ReferenceEquals(paletteOwner,resources)&&appliedDark==dark)return false;
         string[] keys=["Ink","Secondary","Muted","Accent","Hairline","Surface","CanvasBackground","ControlSurface","SelectionSurface","PrimarySurface","PrimaryInk","MatrixSurface","MatrixPreferred","MatrixSecondary","MatrixDisabled","MatrixInk","MatrixDisabledInk","MatrixBorder","Error","PlotHole","PlotShaft"];
         string[] values=dark
-            ? ["#E8EDF4","#BAC5D1","#A1ADBB","#93B8FF","#3E4855","#242A32","#191D23","#2C343F","#263C59","#E1E7F0","#1C2530","#252D37","#233F32","#443D27","#20262E","#E0E7EF","#83909E","#4A5665","#FFAAA1","#245DDB","#9D5B17"]
-            : ["#20252B","#505C68","#626F7C","#245DDB","#D8DEE5","#FFFFFF","#F5F6F8","#F0F2F5","#E9F0FF","#245DDB","#FFFFFF","#FFFFFF","#E5F3E5","#FFF2C7","#E6EAEE","#24303B","#66727E","#D2D9E2","#A7332C","#245DDB","#9D5B17"];
+            ? ["#E6EBF0","#BAC5D1","#A1ADBB","#93B8FF","#414D5B","#252C34","#191F26","#2C343F","#263C59","#E1E7F0","#1C2530","#252D37","#233F32","#443D27","#20262E","#E0E7EF","#83909E","#4A5665","#FFAAA1","#245C91","#9D5B17"]
+            : ["#202B36","#4F5E6C","#5D6C79","#245C91","#CDD5DD","#FFFFFF","#E8EDF1","#F0F3F6","#E4EEF7","#245C91","#FFFFFF","#FFFFFF","#E5EFE9","#F4EDD6","#E6EAEE","#24303B","#66727E","#C8D2DB","#A7332C","#245C91","#9D5B17"];
         for(int i=0;i<keys.Length;i++)Application.Current.Resources[keys[i]]=new SolidColorBrush((Color)ColorConverter.ConvertFromString(values[i]));
-        Application.Current.Resources["FeatureHoleInk"]=new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark?"#93B8FF":"#245DDB"));
+        Application.Current.Resources["FeatureHoleInk"]=new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark?"#93B8FF":"#245C91"));
         Application.Current.Resources["FeatureShaftInk"]=new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark?"#F0BC84":"#9D5B17"));
         Application.Current.Resources["FocusRing"]=new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark?"#D5E5FF":"#172C4F"));
+        Application.Current.Resources["HoverSurface"]=new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark?"#35414E":"#E6EBF0"));
+        paletteOwner=resources;appliedDark=dark;
+        return true;
     }
     internal static void MatrixState(Button button,TextBlock check,SelectionRank rank,bool selected)
     {

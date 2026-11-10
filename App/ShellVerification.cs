@@ -16,6 +16,7 @@ internal static class ShellVerification
         void Check(bool ok,string name){checks++;if(!ok)throw new InvalidOperationException(name);}
         void Flush()=>w.Dispatcher.Invoke(()=>w.UpdateLayout(),DispatcherPriority.ContextIdle);
         Check(w.ActivePage=="geometry","First launch geometry");
+        SettingsThemeVerification.Run(directory,Check);
         RefactorVerification.Run(w,directory,Check);
         FitPanelVerification.Run(w,directory,Check);
         UniformResultVerification.Run(w,directory,Check);
@@ -23,6 +24,8 @@ internal static class ShellVerification
         GeometryPolishVerification.Run(w,directory,Check);
         InteractionPolishVerification.Run(w,directory,Check);
         TextCleanupVerification.Run(w,directory,Check);
+        IndustrialUiVerification.Run(w,directory,Check);
+        WindowPresentationVerification.Run(w,directory,Check);
         foreach(var p in w.SizePages.Values)
         {
             Check(p.HasResult,"Default result "+p.PageId);

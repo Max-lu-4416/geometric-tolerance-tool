@@ -18,13 +18,7 @@ public partial class MainWindow : Window
         this.ownsClipboard = ownsClipboard;
         this.feedback=feedback;
         InitializeComponent();
-        // Fit this application's window to the available desktop; the fixed
-        // content scales down instead of introducing scroll bars.
-        var area = SystemParameters.WorkArea;
-        MinWidth = Math.Min(MinWidth, area.Width);
-        MinHeight = Math.Min(MinHeight, area.Height);
-        Width = Math.Min(Width, area.Width);
-        Height = Math.Min(Height, area.Height);
+        _=new ContentWindowSizing(this,new Size(DesignSurface.Width,DesignSurface.Height),LayoutHost.Margin);
         DataContext = ViewModel;
         mmCopy=new(ResultNumber,v=>clipboard.Copy(v.Text,ReportCopy,v.SuccessMessage),CopyMm);
         umCopy=new(ResultUmNumber,v=>clipboard.Copy(v.Text,ReportCopy,v.SuccessMessage),CopyUm);

@@ -18,6 +18,7 @@ internal sealed partial class SizePage
         var content=new Grid();card.Child=content;
         foreach(double height in new[]{44d,4d,92d,52d,32d,28d})content.RowDefinitions.Add(new(){Height=new GridLength(height)});
 
+        var heroFace=new Border{Margin=new Thickness(-4,-4,-4,0),CornerRadius=new CornerRadius(4)};heroFace.SetResourceReference(Border.BackgroundProperty,"SelectionSurface");content.Children.Add(heroFace);
         var hero=new Grid();content.Children.Add(hero);
         hero.ColumnDefinitions.Add(new(){Width=new GridLength(160)});hero.ColumnDefinitions.Add(new());hero.ColumnDefinitions.Add(new());
         var nature=new StackPanel();hero.Children.Add(nature);
@@ -33,7 +34,8 @@ internal sealed partial class SizePage
         }
 
         var table=new Grid();SetRow(table,2);content.Children.Add(table);
-        foreach(double width in new[]{80d,112d,112d,112d,168d,170d})table.ColumnDefinitions.Add(new(){Width=new GridLength(width)});
+        var tableHead=new Border();tableHead.SetResourceReference(Border.BackgroundProperty,"ControlSurface");SetColumnSpan(tableHead,6);SetRowSpan(tableHead,2);table.Children.Add(tableHead);
+        foreach(double width in new[]{80d,96d,96d,84d,180d,180d})table.ColumnDefinitions.Add(new(){Width=new GridLength(width)});
         foreach(double height in new[]{20d,20d,26d,26d})table.RowDefinitions.Add(new(){Height=new GridLength(height)});
         void Caption(string text,int row,int col,int span=1,int rowSpan=1)
         {
@@ -71,7 +73,7 @@ internal sealed partial class SizePage
         var actions=new StackPanel{Orientation=Orientation.Horizontal};SetRow(actions,4);content.Children.Add(actions);
         AddCopy(actions,"完整结果",()=>FullText);
         var help=UI.Text(CopyText.DisplayInstructions,11,margin:new Thickness(12,0,0,0));help.VerticalAlignment=VerticalAlignment.Center;actions.Children.Add(help);
-        foreach(var button in actions.Children.OfType<Button>()){button.Height=28;button.Padding=new Thickness(8,3,8,3);button.Margin=new Thickness(0,0,6,0);}
+        foreach(var button in actions.Children.OfType<Button>()){button.Height=32;button.Padding=new Thickness(12,6,12,6);button.Margin=new Thickness(0,0,6,0);}
         var resultNotice=UI.Text("",11);resultNotice.SetResourceReference(TextBlock.ForegroundProperty,"Muted");SetRow(resultNotice,5);content.Children.Add(resultNotice);
         var plotCard=UI.Card();plotCard.Padding=new Thickness(12);SetColumn(plotCard,2);lower.Children.Add(plotCard);plotCard.Child=Plot;
         return(resultSummary,resultNotice,gradeAdvice);

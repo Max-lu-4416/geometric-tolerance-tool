@@ -17,7 +17,7 @@
     <Setter Property="Cursor" Value="Hand" /><Setter Property="FontSize" Value="12" />
     <Setter Property="FocusVisualStyle" Value="{StaticResource KeyboardFocus}" />
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
-      <Grid><Border x:Name="Cell" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" /></Border><Border x:Name="Selection" BorderBrush="{DynamicResource Accent}" BorderThickness="2" CornerRadius="2" IsHitTestVisible="False" Visibility="Collapsed" /></Grid>
+      <Grid><Border x:Name="Cell" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource MatrixCornerRadius}" Padding="{TemplateBinding Padding}"><Viewbox Stretch="Uniform" StretchDirection="DownOnly"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" /></Viewbox></Border><Border x:Name="Selection" BorderBrush="{DynamicResource Accent}" BorderThickness="2" CornerRadius="{DynamicResource MatrixCornerRadius}" IsHitTestVisible="False" Visibility="Collapsed" /></Grid>
       <ControlTemplate.Triggers>
         <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Cell" Property="BorderBrush" Value="{DynamicResource Accent}" /></Trigger>
         <Trigger Property="local:SelectionVisual.IsSelected" Value="True"><Setter TargetName="Selection" Property="Visibility" Value="Visible" /></Trigger>
@@ -28,11 +28,12 @@
   </Style>
   <Style x:Key="NavigationButton" TargetType="Button">
     <Setter Property="FontSize" Value="14" /><Setter Property="Cursor" Value="Hand" /><Setter Property="Background" Value="Transparent" />
-    <Setter Property="FocusVisualStyle" Value="{StaticResource KeyboardFocus}" />
+    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
-      <Grid><Border x:Name="Tab" Background="{TemplateBinding Background}" CornerRadius="4" Margin="0,0,0,4" /><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,2,12,6" /><Border x:Name="SelectedLine" BorderThickness="0,0,0,2" BorderBrush="{TemplateBinding BorderBrush}" Margin="12,0" /></Grid>
+      <Grid><Border x:Name="Tab" Background="{TemplateBinding Background}" CornerRadius="{DynamicResource ControlCornerRadius}" Margin="2,2,2,3" /><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,2,12,2" /><Border x:Name="SelectedLine" Width="28" Height="3" Background="{TemplateBinding BorderBrush}" CornerRadius="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" /><Border x:Name="NavFocus" BorderBrush="{DynamicResource FocusRing}" BorderThickness="1" CornerRadius="{DynamicResource ControlCornerRadius}" Margin="3" Visibility="Collapsed" IsHitTestVisible="False" /></Grid>
       <ControlTemplate.Triggers>
-        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Tab" Property="Background" Value="{DynamicResource ControlSurface}" /></Trigger>
+        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Tab" Property="Background" Value="{DynamicResource HoverSurface}" /></Trigger>
+        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="NavFocus" Property="Visibility" Value="Visible" /></Trigger>
         <Trigger Property="IsPressed" Value="True"><Setter TargetName="Tab" Property="Background" Value="{DynamicResource SelectionSurface}" /></Trigger>
       </ControlTemplate.Triggers>
     </ControlTemplate></Setter.Value></Setter>
@@ -42,7 +43,7 @@
     <Setter Property="FontSize" Value="12" /><Setter Property="Cursor" Value="Hand" />
     <Setter Property="FocusVisualStyle" Value="{StaticResource PrimaryKeyboardFocus}" />
     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
-      <Border x:Name="Face" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="4" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" /></Border>
+      <Border x:Name="Face" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="{DynamicResource ControlCornerRadius}" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" /></Border>
       <ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Face" Property="Opacity" Value="0.9" /></Trigger><Trigger Property="IsPressed" Value="True"><Setter TargetName="Face" Property="Opacity" Value="0.75" /></Trigger><Trigger Property="IsEnabled" Value="False"><Setter TargetName="Face" Property="Opacity" Value="0.5" /><Setter Property="Cursor" Value="Arrow" /></Trigger></ControlTemplate.Triggers>
     </ControlTemplate></Setter.Value></Setter>
   </Style>

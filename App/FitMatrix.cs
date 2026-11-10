@@ -19,13 +19,15 @@ internal sealed partial class SizePage
     {
         foreach(double height in new[]{52d,32d,0d,312d,8d,276d})RowDefinitions.Add(new(){Height=new GridLength(height)});
         var toolbar=new Grid();Children.Add(toolbar);
-        foreach(double width in new[]{98d,124d,42d,916d})toolbar.ColumnDefinitions.Add(new(){Width=new GridLength(width)});
-        var label=UI.Text("公称尺寸",14);label.VerticalAlignment=VerticalAlignment.Center;toolbar.Children.Add(label);
-        var input=new TextBox{Text=Input.Nominal,Height=44,VerticalAlignment=VerticalAlignment.Top};SetColumn(input,1);toolbar.Children.Add(input);
+        foreach(double width in new[]{98d,164d,44d,874d})toolbar.ColumnDefinitions.Add(new(){Width=new GridLength(width)});
+        var toolbarFace=UI.Card();toolbarFace.Padding=new Thickness(0);toolbarFace.Margin=new Thickness(0,0,0,8);SetColumnSpan(toolbarFace,4);toolbar.Children.Add(toolbarFace);
+        var label=UI.Text("公称尺寸",14,FontWeights.Medium,new Thickness(12,0,0,8));label.VerticalAlignment=VerticalAlignment.Center;toolbar.Children.Add(label);
+        var input=new TextBox{Text=Input.Nominal,Height=40,MinHeight=40,Margin=new Thickness(0,2,0,10),VerticalAlignment=VerticalAlignment.Top};SetColumn(input,1);toolbar.Children.Add(input);
         System.Windows.Automation.AutomationProperties.SetName(input,"公称尺寸 / mm");
         System.Windows.Automation.AutomationProperties.SetHelpText(input,"输入大于 0 且不超过 3150 的十进制尺寸；有效范围依所选公差带而定。");
-        var unit=UI.Text("mm",12,margin:new Thickness(8,0,0,0));unit.VerticalAlignment=VerticalAlignment.Center;SetColumn(unit,2);toolbar.Children.Add(unit);
-        var title=UI.Text("",24,FontWeights.Medium,new Thickness(20,0,0,0));title.VerticalAlignment=VerticalAlignment.Center;title.TextWrapping=TextWrapping.NoWrap;title.TextTrimming=TextTrimming.CharacterEllipsis;title.Margin=new Thickness(0);titleCopy=new(title,v=>shell.Copy(v.Text,v.SuccessMessage));titleCopy.Button.Margin=new Thickness(20,0,0,0);SetColumn(titleCopy.Button,3);toolbar.Children.Add(titleCopy.Button);
+        var unit=UI.Text("mm",12,margin:new Thickness(8,0,0,8));unit.VerticalAlignment=VerticalAlignment.Center;SetColumn(unit,2);toolbar.Children.Add(unit);
+        var title=UI.Text("",24,FontWeights.Medium,new Thickness(20,0,0,0));title.VerticalAlignment=VerticalAlignment.Center;title.TextWrapping=TextWrapping.NoWrap;title.TextTrimming=TextTrimming.CharacterEllipsis;title.Margin=new Thickness(0);titleCopy=new(title,v=>shell.Copy(v.Text,v.SuccessMessage));titleCopy.Button.Margin=new Thickness(24,0,12,8);SetColumn(titleCopy.Button,3);toolbar.Children.Add(titleCopy.Button);
+        var titleDivider=new Border{Width=1,Height=28,HorizontalAlignment=HorizontalAlignment.Left,Margin=new Thickness(8,0,0,8)};titleDivider.SetResourceReference(Border.BackgroundProperty,"Hairline");SetColumn(titleDivider,3);toolbar.Children.Add(titleDivider);
         input.TextChanged+=(_,_)=>{Input.Nominal=input.Text;Refresh();shell.SaveInputs();};
         var modes=new StackPanel{Orientation=Orientation.Horizontal};SetRow(modes,1);Children.Add(modes);
         matrixModeButton=new Button{Content=fit?"常用配合矩阵":"公差带矩阵",Padding=new Thickness(14,3,14,3),Margin=new Thickness(0,0,8,2)};
@@ -42,7 +44,7 @@ internal sealed partial class SizePage
         modes.Children.Add(Appearance.Legend("MatrixDisabled","不可用"));
         matrixModeButton.Click+=(_,_)=>SetMatrixMode(true);freeModeButton.Click+=(_,_)=>SetMatrixMode(false);
         matrixLegend=UI.Text("",12);matrixLegend.Visibility=Visibility.Collapsed;matrixLegend.SetResourceReference(TextBlock.ForegroundProperty,"Muted");SetRow(matrixLegend,2);Children.Add(matrixLegend);
-        matrixPanel=fit?BuildMatrix():BuildDeviationMatrix();SetRow(matrixPanel,3);Children.Add(matrixPanel);
+        matrixPanel=fit?BuildMatrix():BuildDeviationMatrix();DecorateMatrix(matrixPanel);SetRow(matrixPanel,3);Children.Add(matrixPanel);
         freePanel=new Grid();freePanel.ColumnDefinitions.Add(new(){Width=new GridLength(680)});freePanel.ColumnDefinitions.Add(new(){Width=new GridLength(24)});freePanel.ColumnDefinitions.Add(new());
         SetRow(freePanel,3);Children.Add(freePanel);
         var variable=new StackPanel();freePanel.Children.Add(variable);
@@ -52,10 +54,25 @@ internal sealed partial class SizePage
         {
         AddChoices(datum,basis==BasisSystem.Hole?FeatureKind.Hole:FeatureKind.Shaft,true);
         }
-        var lower=new Grid();lower.ColumnDefinitions.Add(new(){Width=new GridLength(780)});lower.ColumnDefinitions.Add(new(){Width=new GridLength(16)});lower.ColumnDefinitions.Add(new());SetRow(lower,5);Children.Add(lower);
+        var lower=new Grid();lower.ColumnDefinitions.Add(new(){Width=new GridLength(744)});lower.ColumnDefinitions.Add(new(){Width=new GridLength(12)});lower.ColumnDefinitions.Add(new());SetRow(lower,5);Children.Add(lower);
         var presentation=BuildResultPanel(lower);
         MatrixMode=fit?CommonFits.For(basis).Any(MatchesInput):BandSelection.For(singleKind).Any(MatchesDeviation);UpdateMode();
         return(input,title,presentation.Summary,presentation.Notice,presentation.Advice);
+    }
+    private static void DecorateMatrix(Grid grid)
+    {
+        grid.SetResourceReference(Panel.BackgroundProperty,"Surface");
+        // Sheet rules sit behind native cells. Empty combinations stay non-interactive.
+        for(int row=0;row<grid.RowDefinitions.Count;row++)
+        {
+            var rule=new System.Windows.Shapes.Rectangle{Height=1,VerticalAlignment=VerticalAlignment.Bottom,IsHitTestVisible=false};
+            rule.SetResourceReference(System.Windows.Shapes.Shape.FillProperty,"Hairline");SetRow(rule,row);SetColumnSpan(rule,grid.ColumnDefinitions.Count);SetZIndex(rule,-1);grid.Children.Add(rule);
+        }
+        for(int col=0;col<grid.ColumnDefinitions.Count;col++)
+        {
+            var rule=new System.Windows.Shapes.Rectangle{Width=1,HorizontalAlignment=HorizontalAlignment.Right,IsHitTestVisible=false};
+            rule.SetResourceReference(System.Windows.Shapes.Shape.FillProperty,"Hairline");SetColumn(rule,col);SetRowSpan(rule,grid.RowDefinitions.Count);SetZIndex(rule,-1);grid.Children.Add(rule);
+        }
     }
     private Grid BuildMatrix()
     {
@@ -107,7 +124,7 @@ internal sealed partial class SizePage
     private void UpdateMode()
     {
         matrixPanel!.Visibility=MatrixMode?Visibility.Visible:Visibility.Collapsed;freePanel!.Visibility=MatrixMode?Visibility.Collapsed:Visibility.Visible;
-        matrixModeButton!.BorderBrush=UI.Brush(MatrixMode?"Accent":"Hairline");freeModeButton!.BorderBrush=UI.Brush(MatrixMode?"Hairline":"Accent");
+        matrixModeButton!.SetResourceReference(Control.BorderBrushProperty,MatrixMode?"Accent":"Hairline");freeModeButton!.SetResourceReference(Control.BorderBrushProperty,MatrixMode?"Hairline":"Accent");
         matrixModeButton.BorderThickness=new Thickness(1);freeModeButton.BorderThickness=new Thickness(1);
         matrixModeButton.SetResourceReference(Control.BackgroundProperty,MatrixMode?"SelectionSurface":"ControlSurface");freeModeButton.SetResourceReference(Control.BackgroundProperty,MatrixMode?"ControlSurface":"SelectionSurface");
     }

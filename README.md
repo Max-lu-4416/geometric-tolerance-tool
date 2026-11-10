@@ -1,14 +1,37 @@
-# 公差查询工具 v1.3.7
+# 公差查询工具 v0.4.0 测试版
 
 Windows x64 离线桌面程序，免安装运行。
 
-从 [v1.3.7 发布页](https://github.com/Max-lu-4416/geometric-tolerance-tool/releases/tag/v1.3.7) 下载 EXE 或便携 ZIP。运行版无需安装 .NET；历史 v1.0、v1.3.1 仍保留。
+从 [v0.4.0 测试版发布页](https://github.com/Max-lu-4416/geometric-tolerance-tool/releases/tag/v0.4.0) 下载 EXE 或便携 ZIP。运行版无需安装 .NET；便携 ZIP 包含许可、中文说明和验证记录。GitHub 发布均标为预发布，当前处于测试阶段。
 
-![轴偏差矩阵](docs/shaft-preview.png)
+![轴偏差矩阵](docs/v0.4.0/shaft.png)
 
-![孔偏差矩阵](docs/hole-preview.png)
+![孔偏差矩阵](docs/v0.4.0/hole.png)
 
-[配合矩阵预览](docs/query-preview.png) · [UI 前后对照](docs/ui-comparison.html)
+[配合矩阵预览](docs/v0.4.0/fit.png) · [深色形位公差预览](docs/v0.4.0/geometry-dark.png) · [历史UI前后对照](docs/ui-comparison.html)
+
+## v0.4.0 更新
+
+- 修复设置页反复创建控件造成的字体缓存保留和焦点丢失：设置视图按窗口生命周期复用，字号缓存采用弱引用键。
+- 跟随系统主题时，仅实际明暗状态改变才更新资源；主题、字号、置顶切换不触发不必要的查询刷新。
+- 统一六页 Modern Industrial + Windows 11 Fluent 视觉：主面板8 DIP、普通控件4 DIP、矩阵1 DIP圆角，保留紧凑矩阵、等宽数字和原有查询方式。
+- 主窗口上限按1180×770 DIP内容、16 DIP内边距、系统框架及当前显示器工作区计算。100% DPI实测默认及最大尺寸1228×841 DIP；小工作区按整块画布等比下缩放，保留窗口缩小、原生最大化、标题栏双击及还原。
+- 公差数据、尺寸分段、计算公式、单位换算、显示精度、配合分类、设置JSON格式和复制内容保持原样。
+
+完整验证见 [VALIDATION.md](VALIDATION.md)。100% DPI已实际验证窗口状态；125%、150%、200%完成程序内渲染和工作区模型检查，尚未执行真实显示器DPI切换或跨屏迁移，不能将渲染结果等同于物理DPI验收。
+
+## 测试版编号
+
+历史GitHub发布按发布时间顺序统一编号，保留原Git标签、原附件文件名和字节内容；旧程序内部版本不重写。历史发布和附件下载地址随新标签变化，原始内部版本号仍保留在历史说明中。
+
+| 测试版编号 | 原发布/内部版本 | 内容 |
+|---|---|---|
+| [v0.1.0](https://github.com/Max-lu-4416/geometric-tolerance-tool/releases/tag/v0.1.0) | v1.0 | 初始离线查询 |
+| [v0.2.0](https://github.com/Max-lu-4416/geometric-tolerance-tool/releases/tag/v0.2.0) | v1.3.1 | 公差矩阵与界面精修 |
+| [v0.3.0](https://github.com/Max-lu-4416/geometric-tolerance-tool/releases/tag/v0.3.0) | v1.3.7 | 点击数值复制与文字精简 |
+| [v0.4.0](https://github.com/Max-lu-4416/geometric-tolerance-tool/releases/tag/v0.4.0) | 0.4.0 | 设置/主题修复、Fluent精修和窗口上限 |
+
+以下保留开发时的原始版本编号及功能记录；其中未单独发布的版本不另建GitHub Release。
 
 ## v1.3.7 文字精简
 
@@ -145,12 +168,12 @@ H 要求较严格，K 居中，L 较宽松；三者用于未单独标注的几�
 dotnet run --project Tests/Tolerance.Tests.csproj -c Release
 ./build.ps1
 New-Item -ItemType Directory artifacts/ui-verification -Force
-& './artifacts/geometric-tolerance-tool-v1.3.7/几何公差查询工具.exe' --verify-all './artifacts/ui-verification'
+& './artifacts/geometric-tolerance-tool-v0.4.0/几何公差查询工具.exe' --verify-all './artifacts/ui-verification'
 ```
 
 程序内验证检查控件事件、绑定、H/K/L 条件、剪贴板、图例加载、设置恢复及固定布局。通过 WPF 直接渲染预览，不使用桌面自动化或更改显示设置。完整形位回归另使用 `--verify-ui`。
 
-`build.ps1` 默认输出到仓库内的 `artifacts/geometric-tolerance-tool-v1.3.7`，可通过 `-OutputDir` 指定目录、`-Dotnet` 指定 SDK 可执行文件。编译与测试只依赖已提交的内嵌数据和样本，不依赖原始 PDF。
+`build.ps1` 默认输出到仓库内的 `artifacts/geometric-tolerance-tool-v0.4.0`，可通过 `-OutputDir` 指定目录、`-Dotnet` 指定 SDK 可执行文件。编译与测试只依赖已提交的内嵌数据和样本，不依赖原始 PDF。
 
 ## 许可
 

@@ -1,4 +1,4 @@
-param([string]$Dotnet = 'dotnet', [string]$OutputDir = (Join-Path $PSScriptRoot 'artifacts/geometric-tolerance-tool-v1.3.7'))
+param([string]$Dotnet = 'dotnet', [string]$OutputDir = (Join-Path $PSScriptRoot 'artifacts/geometric-tolerance-tool-v0.4.0'))
 $ErrorActionPreference = 'Stop'
 $projectRoot = $PSScriptRoot
 $OutputDir = [System.IO.Path]::GetFullPath($OutputDir)

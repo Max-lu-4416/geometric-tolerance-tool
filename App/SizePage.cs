@@ -105,8 +105,8 @@ internal sealed partial class SizePage : Grid
             string zone=c.Kind==FeatureKind.Hole?Input.HoleZone:Input.ShaftZone;int grade=c.Kind==FeatureKind.Hole?Input.HoleGrade:Input.ShaftGrade;
             bool selected=c.Zone is null?c.Grade==grade:c.Zone==zone;
             c.Button.IsEnabled=valid&&(c.Zone is null?catalog.Available(c.Kind,d,zone,c.Grade):Enumerable.Range(1,18).Any(g=>catalog.Available(c.Kind,d,c.Zone,g)));
-            c.Button.BorderBrush=UI.Brush(selected?"Accent":"Hairline");c.Button.BorderThickness=new Thickness(selected?2:1);
-            c.Button.Foreground=UI.Brush(selected?"Accent":"Ink");
+            c.Button.SetResourceReference(Control.BorderBrushProperty,selected?"Accent":"Hairline");c.Button.BorderThickness=new Thickness(selected?2:1);
+            c.Button.SetResourceReference(Control.ForegroundProperty,selected?"Accent":"Ink");
         }
         try
         {
@@ -126,6 +126,7 @@ internal sealed partial class SizePage : Grid
         if(notice.Text==CopyText.WithTitle)notice.Text="";
     }
     internal void Restore(PageInput input){Input=input;nominal.Text=input.Nominal;Refresh();}
+    internal void RefreshAppearance()=>Plot.InvalidateVisual();
 }
 
 internal sealed class BandPlot : FrameworkElement
@@ -133,24 +134,33 @@ internal sealed class BandPlot : FrameworkElement
     internal DeviationResult? Hole,Shaft;
     protected override void OnRender(DrawingContext dc)
     {
-        base.OnRender(dc);double w=ActualWidth,h=ActualHeight;dc.DrawRectangle(Brushes.White,new Pen(Brushes.LightGray,1),new Rect(0,0,w,h));
-        void Text(string s,double x,double y,Brush? brush=null,double size=12)=>dc.DrawText(new FormattedText(s,CultureInfo.InvariantCulture,FlowDirection.LeftToRight,new Typeface("Consolas"),size,brush??Brushes.DimGray,VisualTreeHelper.GetDpi(this).PixelsPerDip),new Point(x,y));
-        Text("公差带 · 端点偏差 / μm",16,12);
+        base.OnRender(dc);double w=ActualWidth,h=ActualHeight;
+        if(w<=0||h<=0)return;
+        var ink=new SolidColorBrush(Color.FromRgb(65,80,94));var rule=new Pen(new SolidColorBrush(Color.FromRgb(222,229,235)),1);
+        dc.DrawRectangle(Brushes.White,null,new Rect(0,0,w,h));
+        void Text(string s,double x,double y,Brush? brush=null,double size=12)=>dc.DrawText(new FormattedText(s,CultureInfo.InvariantCulture,FlowDirection.LeftToRight,new Typeface("Consolas, Microsoft YaHei UI"),size,brush??ink,VisualTreeHelper.GetDpi(this).PixelsPerDip),new Point(x,y));
+        Text("公差带",4,2,ink,14);Text("端点偏差 / μm",w-112,4,ink,11);
+        dc.DrawLine(rule,new Point(4,28),new Point(w-4,28));
         var values=new[]{Hole,Shaft}.Where(r=>r is not null).SelectMany(r=>new[]{r!.LowerUm,r.UpperUm}).Append(0m).ToArray();
         if(values.Length==1){Text("有效查询后显示公差带",20,h/2);return;}
         decimal min=values.Min(),max=values.Max(),span=max-min;
-        double Y(decimal v)=>48+(double)((max-v)/span)*(h-100);
-        double zero=Y(0);var zeroPen=new Pen(Brushes.DarkGray,1){DashStyle=DashStyles.Dash};dc.DrawLine(zeroPen,new Point(24,zero),new Point(w-24,zero));Text("0",30,zero-20);
-        double barWidth=Math.Min(82,w*.16);double labelSize=w<450?11:12;
+        double Y(decimal v)=>50+(double)((max-v)/span)*(h-100);
+        // A shared linear scale for both bands, with the zero datum always in range.
+        for(int i=0;i<=4;i++){double y=50+i*(h-100)/4;dc.DrawLine(rule,new Point(28,y),new Point(w-8,y));}
+        dc.DrawLine(rule,new Point(28,42),new Point(28,h-42));
+        double zero=Y(0);var zeroPen=new Pen(new SolidColorBrush(Color.FromRgb(108,122,135)),1){DashStyle=DashStyles.Dash};dc.DrawLine(zeroPen,new Point(28,zero),new Point(w-8,zero));Text("0",8,zero-8);
+        double barWidth=Math.Min(58,w*.145);double labelSize=11;
         void Band(DeviationResult? r,double x,Color color,string label)
         {
             if(r is null)return;double top=Y(r.UpperUm),bottom=Y(r.LowerUm);
-            var fill=new SolidColorBrush(Color.FromArgb(65,color.R,color.G,color.B));var stroke=new SolidColorBrush(color);
-            dc.DrawRectangle(fill,new Pen(stroke,1.6),new Rect(x,top,barWidth,Math.Max(.1,bottom-top)));
-            Text(NumberDisplay.Signed(r.UpperUm),x+barWidth+10,top-9,stroke,labelSize);Text(NumberDisplay.Signed(r.LowerUm),x+barWidth+10,Math.Max(bottom-9,top+9),stroke,labelSize);
-            Text(label+" "+r.Band,x-2,h-30,stroke,13);
+            var fill=new SolidColorBrush(Color.FromArgb(38,color.R,color.G,color.B));var stroke=new SolidColorBrush(color);var outline=new Pen(stroke,1.4);
+            dc.DrawRectangle(fill,outline,new Rect(x,top,barWidth,Math.Max(.1,bottom-top)));
+            dc.DrawLine(outline,new Point(x+barWidth,top),new Point(x+barWidth+6,top));dc.DrawLine(outline,new Point(x+barWidth,bottom),new Point(x+barWidth+6,bottom));
+            Text(NumberDisplay.Signed(r.UpperUm),x+barWidth+9,top-9,stroke,labelSize);Text(NumberDisplay.Signed(r.LowerUm),x+barWidth+9,Math.Max(bottom-9,top+9),stroke,labelSize);
+            Text(label+" "+r.Band,x-2,h-28,stroke,13);
         }
-        Band(Hole,w*(w<450?.12:.22),((SolidColorBrush)UI.Brush("PlotHole")).Color,"孔");Band(Shaft,w*(w<450?.55:.60),((SolidColorBrush)UI.Brush("PlotShaft")).Color,"轴");
+        bool pair=Hole is not null&&Shaft is not null;
+        Band(Hole,w*(pair?.16:.36),((SolidColorBrush)UI.Brush("PlotHole")).Color,"孔");Band(Shaft,w*(pair?.58:.36),((SolidColorBrush)UI.Brush("PlotShaft")).Color,"轴");
     }
 }
 
@@ -159,5 +169,14 @@ internal static class UI
     internal static Brush Brush(string key)=>(Brush)Application.Current.Resources[key];
     internal static TextBlock Text(string text,double size=14,FontWeight? weight=null,Thickness? margin=null)
     {var t=new TextBlock{Text=text,FontSize=size,FontWeight=weight??FontWeights.Normal,Margin=margin??new Thickness(0),TextWrapping=TextWrapping.Wrap};t.SetResourceReference(TextBlock.ForegroundProperty,"Ink");return t;}
-    internal static Border Card(){var b=new Border{Padding=new Thickness(20),CornerRadius=new CornerRadius(8),BorderThickness=new Thickness(1)};b.SetResourceReference(Border.BackgroundProperty,"Surface");b.SetResourceReference(Border.BorderBrushProperty,"Hairline");return b;}
+    internal static FrameworkElement SectionHeading(string title,string? detail=null,Thickness? margin=null)
+    {
+        var grid=new Grid{Margin=margin??new Thickness(0)};
+        grid.ColumnDefinitions.Add(new(){Width=GridLength.Auto});grid.ColumnDefinitions.Add(new());
+        var text=Text(title,14,FontWeights.Medium);grid.Children.Add(text);
+        var line=new Border{Height=1,Margin=new Thickness(12,0,0,0),VerticalAlignment=VerticalAlignment.Center};line.SetResourceReference(Border.BackgroundProperty,"Hairline");Grid.SetColumn(line,1);grid.Children.Add(line);
+        if(detail is not null){grid.RowDefinitions.Add(new(){Height=GridLength.Auto});grid.RowDefinitions.Add(new(){Height=GridLength.Auto});var caption=Text(detail,12,margin:new Thickness(0,6,0,0));caption.SetResourceReference(TextBlock.ForegroundProperty,"Secondary");Grid.SetRow(caption,1);Grid.SetColumnSpan(caption,2);grid.Children.Add(caption);}
+        return grid;
+    }
+    internal static Border Card(){var b=new Border{Padding=new Thickness(16),CornerRadius=new CornerRadius(8),BorderThickness=new Thickness(1)};b.SetResourceReference(Border.CornerRadiusProperty,"PanelCornerRadius");b.SetResourceReference(Border.BackgroundProperty,"Surface");b.SetResourceReference(Border.BorderBrushProperty,"Hairline");return b;}
 }
